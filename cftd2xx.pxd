@@ -1,3 +1,15 @@
+#   ________________     _________________    ________________
+#  /                |   /                 |  |                 \
+# |    __     __    |  |    ______________|  |    __________    |
+# |   |  |   |  |   |  |   |                 |   |          |   |
+# |___|  |___|  |   |  |   |______________   |   |          |   |
+#  ___    ___   |   |  |                  |  |   |   _______|   |
+# |___|  |   |  |   |  |_____________     |  |   |  |           |
+#  ___   |___|  |   |                |    |  |   |  |__     ___/
+# |___|   ___   |   |   _____________|    |  |   |     \    \
+#  ___   |   |  |   |  |                  |  |   |      \    \
+# |___|  |___|  |___|  |_________________/   |___|       \____\
+#
 
 cdef extern from "ftd2xx.h":
     ctypedef unsigned int DWORD
@@ -30,7 +42,7 @@ cdef extern from "ftd2xx.h":
     ctypedef PVOID LPVOID
     ctypedef void VOID
     ctypedef unsigned long long int ULONGLONG
-    
+
     cdef enum:
         FT_OK = 0
         FT_INVALID_HANDLE = 1
@@ -53,7 +65,12 @@ cdef extern from "ftd2xx.h":
         FT_NOT_SUPPORTED = 17
         FT_OTHER_ERROR = 18
         FT_DEVICE_LIST_NOT_READY = 19
-        
+
+    cdef enum:
+        FT_OPEN_BY_SERIAL_NUMBER = 1
+        FT_OPEN_BY_DESCRIPTION = 2
+        FT_OPEN_BY_LOCATION = 4
+
     ctypedef PVOID FT_HANDLE
     ctypedef ULONG FT_STATUS
 
@@ -62,5 +79,6 @@ cdef extern from "ftd2xx.h":
     FT_STATUS FT_GetDeviceInfoDetail(DWORD dwIndex, LPDWORD lpdwFlags,
         LPDWORD lpdwType, LPDWORD lpdwID, LPDWORD lpdwLocId, LPVOID lpSerialNumber,
         LPVOID lpDescription, FT_HANDLE *pftHandle)
-        
+
     FT_STATUS FT_OpenEx(PVOID pArg1, DWORD Flags, FT_HANDLE *pHandle)
+    FT_STATUS FT_Close(FT_HANDLE ftHandle)
