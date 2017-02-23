@@ -145,8 +145,9 @@ cdef class FT4222:
             uint16 bytesRead
         resize(buf, bytesToRead)
         status = FT4222_I2CMaster_Read(self.handle, addr, buf.data.as_uchars, bytesToRead, &bytesRead)
+        resize(buf, bytesRead)
         if status == FT4222_OK:
-            return <bytes>resize(buf, bytesRead)
+            return bytes(buf)
         raise FT4222DeviceError, status
 
     def i2cMaster_Write(self, addr, data):
@@ -170,8 +171,9 @@ cdef class FT4222:
             uint16 bytesRead
         resize(buf, bytesToRead)
         status = FT4222_I2CMaster_ReadEx(self.handle, addr, flag, buf.data.as_uchars, bytesToRead, &bytesRead)
+        resize(buf, bytesRead)
         if status == FT4222_OK:
-            return <bytes>resize(buf, bytesRead)
+            return bytes(buf)
         raise FT4222DeviceError, status
 
     def i2cMaster_WriteEx(self, addr, flag, data):
