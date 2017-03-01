@@ -29,7 +29,7 @@ setup(
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
                   libraries=["ft4222"],
                   extra_compile_args=["-Ilinux"],
-                  extra_link_args=["-Llinux/build-x86_64/"])
+                  library_dirs=["linux/build-x86_64/"])
     ],
     cmdclass = {'build_ext': build_ext},
 )
