@@ -138,7 +138,19 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def i2cMaster_Read(self, addr, bytesToRead):
-        """Read data from the specified I2C slave device with START and STOP conditions."""
+        """Read data from the specified I2C slave device with START and STOP conditions.
+
+        Args:
+            addr (int): I2C slave address
+            bytesToRead (int): Number of bytes to read from slave
+
+        Returns:
+            bytes: Bytes read from slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
