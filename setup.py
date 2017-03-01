@@ -23,7 +23,7 @@ setup(
     author='Martin Gysel',
     author_email='me@bearsh.org',
     description='python wrapper around libFT4222',
-    #packages=['ft4222'],
+    packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO'],
     ext_modules = [
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
                   libraries=["ft4222"],
