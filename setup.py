@@ -13,7 +13,9 @@
 
 from distutils.core import setup
 from distutils.extension import Extension
-from Cython.Build import cythonize
+from Cython.Distutils import build_ext
+
+
 
 setup(
     name='pyFT4222',
@@ -21,10 +23,12 @@ setup(
     author='Martin Gysel',
     author_email='me@bearsh.org',
     description='python wrapper around libFT4222',
-    ext_modules = cythonize([
-        Extension("ft4222", ["ft4222.pyx"],
+    #packages=['ft4222'],
+    ext_modules = [
+        Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
                   libraries=["ft4222"],
                   extra_compile_args=["-Ilinux"],
                   extra_link_args=["-Llinux/build-x86_64/"])
-    ])
+    ],
+    cmdclass = {'build_ext': build_ext},
 )

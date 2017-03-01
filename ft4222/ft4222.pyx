@@ -11,11 +11,10 @@
 # |___|  |___|  |___|  |_________________/   |___|       \____\
 #
 
-from cftd2xx cimport *
-from clibft4222 cimport *
+from ft4222.cftd2xx cimport *
+from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
-from enum import IntEnum
 
 
 __ftd2xx_msgs = ['OK', 'INVALID_HANDLE', 'DEVICE_NOT_FOUND', 'DEVICE_NOT_OPENED',
@@ -209,65 +208,3 @@ cdef class FT4222:
             return cs
         raise FT4222DeviceError, status
 
-
-class I2CMaster():
-    class Flag(IntEnum):
-        """
-        NONE
-        START
-        REPEATED_START: Repeated_START will not send master code in HS mode
-        STOP
-        START_AND_STOP: START condition followed by SEND and STOP condition
-        """
-        NONE = 0x80
-        START = 0x02
-        REPEATED_START = 0x03  # Repeated_START will not send master code in HS mode
-        STOP  = 0x04
-        START_AND_STOP = 0x06  # START condition followed by SEND and STOP condition
-    class ControllerStatus(IntEnum):
-        """
-        BUSY:  controller busy: all other status bits invalid
-        ERROR: error condition
-        ADDRESS_NACK: slave address was not acknowledged during last operation
-        DATA_NACK: data not acknowledged during last operation
-        ARB_LOST: arbitration lost during last operation
-        IDLE: controller idle
-        BUSY: bus busy
-        """
-        BUSY = 0x01
-        ERROR = 0x02
-        ADDRESS_NACK = 0x04
-        DATA_NACK = 0x08
-        ARB_LOST = 0x10
-        IDLE = 0x20
-        BUS_BUSY = 0x40
-
-class GPIO():
-    class Trigger(IntEnum):
-        """
-        RISING, FALLING, LEVEL_HIGH, LEVEL_LOW
-        """
-        RISING         = 0x01
-        FALLING        = 0x02
-        LEVEL_HIGH     = 0x04
-        LEVEL_LOW      = 0X08
-    class Output(IntEnum):
-        """
-        LOW, HIGH
-        """
-        LOW  = 0
-        HIGH = 1
-    class Port(IntEnum):
-        """
-        P0, P1, P2, P3
-        """
-        P0  = 0
-        P1  = 1
-        P2  = 2
-        P3  = 3
-    class Dir(IntEnum):
-        """
-        OUTPUT, INPUT
-        """
-        OUTPUT = 0
-        INPUT  = 1
