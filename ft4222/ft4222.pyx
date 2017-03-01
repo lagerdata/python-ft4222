@@ -70,10 +70,7 @@ def getDeviceInfoDetail(devnum=0, update=True):
     """Get an entry from the internal device info list. Set update to
     False to avoid a slow call to createDeviceInfoList."""
     cdef:
-        DWORD f
-        DWORD t
-        DWORD i
-        DWORD l
+        DWORD f, t, i, l
         FT_HANDLE h
         char n[MAX_DESCRIPTION_SIZE]
         char d[MAX_DESCRIPTION_SIZE]
