@@ -1,3 +1,4 @@
-/*.c
-/build
-/*.so
+*.c
+*.so
+build/
+__pycache__/
