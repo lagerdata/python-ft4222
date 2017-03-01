@@ -22,6 +22,7 @@ setup(
     version='0.1',
     author='Martin Gysel',
     author_email='me@bearsh.org',
+    url='http://msr.ch',
     description='python wrapper around libFT4222',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO'],
     ext_modules = [
