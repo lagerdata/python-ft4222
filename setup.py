@@ -28,7 +28,7 @@ setup(
     ext_modules = [
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
                   libraries=["ft4222"],
-                  extra_compile_args=["-Ilinux"],
+                  extra_compile_args=["-O3", "-Ilinux"],
                   library_dirs=["linux/build-x86_64/"])
     ],
     cmdclass = {'build_ext': build_ext},
