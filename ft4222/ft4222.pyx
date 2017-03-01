@@ -129,7 +129,15 @@ cdef class FT4222:
         self.handle = NULL
 
     def i2cMaster_Init(self, kbps=100):
-        """Initialize the FT4222H as an I2C master with the requested I2C speed."""
+        """Initialize the FT4222H as an I2C master with the requested I2C speed.
+
+        Args:
+            kbps (int): Speed in kb/s
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_I2CMaster_Init(self.handle, kbps)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
@@ -159,7 +167,19 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def i2cMaster_Write(self, addr, data):
-        """Write data to the specified I2C slave device with START and STOP conditions."""
+        """Write data to the specified I2C slave device with START and STOP conditions.
+
+        Args:
+            addr (int): I2C slave address
+            data (int, bytes, bytearray): Data to write to slave
+
+        Returns:
+            int: Bytes sent to slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if isinstance(data, int):
             data = bytes(data)
         elif not isinstance(data, (bytes, bytearray)):
@@ -173,7 +193,20 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def i2cMaster_ReadEx(self, addr, flag, bytesToRead):
-        """Read data from the specified I2C slave device with the specified I2C condition."""
+        """Read data from the specified I2C slave device with the specified I2C condition.
+
+        Args:
+            addr (int): I2C slave address
+            flag (ft4222.I2CMaster.Flag): Flag to control start- and stopbit generation
+            bytesToRead (int): Number of bytes to read from slave
+
+        Returns:
+            bytes: Bytes read from slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
@@ -185,7 +218,20 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def i2cMaster_WriteEx(self, addr, flag, data):
-        """Write data to the specified I2C slave device with the specified I2C condition."""
+        """Write data to the specified I2C slave device with the specified I2C condition.
+
+        Args:
+            addr (int): I2C slave address
+            flag (ft4222.I2CMaster.Flag): Flag to control start- and stopbit generation
+            data (int, bytes, bytearray): Data to write to slave
+
+        Returns:
+            int: Bytes sent to slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if isinstance(data, int):
             data = bytes(data)
         elif not isinstance(data, (bytes, bytearray)):
@@ -199,8 +245,8 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def i2cMaster_Reset(self):
-        """
-        Reset the I2C master device.
+        """Reset the I2C master device.
+
         If the I2C bus encounters errors or works abnormally, this function will reset the I2C device.
         It is not necessary to call I2CMaster_Init again after calling this reset function.
         """
@@ -209,9 +255,12 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def i2cMaster_GetStatus(self):
-        """
-        Read the status of the I2C master controller.
+        """Read the status of the I2C master controller.
+
         This can be used to poll a slave until its write-cycle is complete.
+
+        Returns:
+            ft4222.I2CMaster.ControllerStatus: Controller status
         """
         cdef uint8 cs
         status = FT4222_I2CMaster_GetStatus(self.handle, &cs)
