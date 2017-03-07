@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# pyFT4222 documentation build configuration file, created by
+# ft4222 documentation build configuration file, created by
 # sphinx-quickstart on Wed Mar  1 13:03:33 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'pyFT4222'
+project = 'ft4222'
 copyright = '2017, Martin Gysel'
 author = 'Martin Gysel'
 
@@ -102,7 +102,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pyFT4222doc'
+htmlhelp_basename = 'ft4222doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -129,7 +129,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pyFT4222.tex', 'pyFT4222 Documentation',
+    (master_doc, 'ft4222.tex', 'ft4222 Documentation',
      'Martin Gysel', 'manual'),
 ]
 
@@ -139,7 +139,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pyft4222', 'pyFT4222 Documentation',
+    (master_doc, 'ft4222', 'ft4222 Documentation',
      [author], 1)
 ]
 
@@ -150,8 +150,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pyFT4222', 'pyFT4222 Documentation',
-     author, 'pyFT4222', 'One line description of project.',
+    (master_doc, 'ft4222', 'ft4222 Documentation',
+     author, 'ft4222', 'One line description of project.',
      'Miscellaneous'),
 ]
 

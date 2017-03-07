@@ -18,7 +18,7 @@ from Cython.Distutils import build_ext
 
 
 setup(
-    name='pyFT4222',
+    name='ft4222',
     version='0.1',
     author='Martin Gysel',
     author_email='me@bearsh.org',
