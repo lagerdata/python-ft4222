@@ -1,3 +1,10 @@
+#  _____ _____ _____
+# |_    |   __| __  |
+# |_| | |__   |    -|
+# |_|_|_|_____|__|__|
+# MSR Electronics GmbH
+#
+
 """Control FTDI USB chips for I2C/SPI/GPIO.
 
 Open a handle using one of the ft4222.openBy... functions and use the methods
