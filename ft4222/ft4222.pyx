@@ -30,6 +30,14 @@ __ftd4222_msgs = ['DEVICE_NOT_SUPPORTED', 'CLK_NOT_SUPPORTED','VENDER_CMD_NOT_SU
                   'GPIO_INPUT_NOT_SUPPORTED', 'EVENT_NOT_SUPPORTED', 'FUN_NOT_SUPPORT']
 
 
+# Revision A chips report chipVersion as 0x42220100; revision B chips report
+# 0x42220200; revision C chips report 0x42220300. Revision B chips require
+# version 1.2 or later of LibFT4222, indicated by dllVersion being greater than
+# 0x01020000; Revision C chips require version 1.3 or later of LibFT4222, indicated
+# by dllVersion being greater than 0x01030000.
+__chip_rev_map = { 0x42220100: "Rev. A", 0x42220200: "Rev. B", 0x42220300: "Rev. C" }
+__chip_rev_min_lib = { 0x42220100: 0, 0x42220200: 0x01020000, 0x42220300: 0x01030000 }
+
 
 DEF MAX_DESCRIPTION_SIZE = 256
 
@@ -107,9 +115,14 @@ def openByLocation(locId):
 
 cdef class FT4222:
     cdef FT_HANDLE handle
+    cdef DWORD chip_version
+    cdef DWORD dll_version
 
     def __init__(self, handle, update=True):
         self.handle = <FT_HANDLE><uintptr_t>handle
+        self.chip_version = 0
+        self.dll_version = 0
+        self.__get_version()
 
     def __del__(self):
         if self.handle != NULL:
@@ -121,6 +134,38 @@ cdef class FT4222:
         if status != FT_OK:
             raise FT4222DeviceError, status
         self.handle = NULL
+
+    cdef __get_version(self):
+        cdef FT4222_Version ver
+        status = FT4222_GetVersion(self.handle, &ver)
+        if status == FT4222_OK:
+            self.chip_version = ver.chipVersion
+            self.dll_version = ver.dllVersion
+
+    @property
+    def chipVersion(self) -> int:
+        """Chip version as number"""
+        return self.chip_version
+
+    @property
+    def libVersion(self) -> int:
+        """Library version as number"""
+        return self.dll_version
+
+    def chipRevision(self) -> str:
+        """Get the revision of the chip in human readable format
+
+        Returns:
+            str: chip revision
+
+        """
+        try:
+            return __chip_rev_map[self.chip_version]
+        except KeyError:
+            return "Rev. unknown"
+
+    def __repr__(self):
+        return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self.chip_version, self.chipRevision(), self.dll_version)
 
     def i2cMaster_Init(self, kbps=100):
         """Initialize the FT4222H as an I2C master with the requested I2C speed.
