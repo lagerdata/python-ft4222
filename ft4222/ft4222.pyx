@@ -95,7 +95,18 @@ def openBySerial(serial):
     raise FT2XXDeviceError, status
 
 def openByDescription(desc):
-    """Open a handle to a usb device by description"""
+    """Open a handle to a usb device by description
+
+    Args:
+        desc (bytes, str): Description of the device
+
+    Returns:
+        FT4222: Opened device
+
+    Raises:
+        FT2XXDeviceError: on error
+
+    """
     cdef FT_HANDLE handle
     cdef char* cdesc = desc
     status = FT_OpenEx(<PVOID>cdesc, FT_OPEN_BY_DESCRIPTION, &handle)
@@ -105,7 +116,18 @@ def openByDescription(desc):
     raise FT2XXDeviceError, status
 
 def openByLocation(locId):
-    """Open a handle to a usb device by description"""
+    """Open a handle to a usb device by location
+
+    Args:
+        locId (int): Location id
+
+    Returns:
+        FT4222: Opened device
+
+    Raises:
+        FT2XXDeviceError: on error
+
+    """
     cdef FT_HANDLE handle
     status = FT_OpenEx(<PVOID><uintptr_t>locId, FT_OPEN_BY_LOCATION, &handle)
     if status == FT_OK:
