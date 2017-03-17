@@ -107,6 +107,8 @@ def openByDescription(desc):
         FT2XXDeviceError: on error
 
     """
+    if isinstance(desc, str):
+        desc = desc.encode('utf-8')
     cdef FT_HANDLE handle
     cdef char* cdesc = desc
     status = FT_OpenEx(<PVOID>cdesc, FT_OPEN_BY_DESCRIPTION, &handle)
