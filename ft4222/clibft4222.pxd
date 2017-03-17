@@ -10,24 +10,14 @@ from cftd2xx cimport *
 
 
 cdef extern from "libft4222.h":
-    IF UNAME_SYSNAME == "Windows":
-        ctypedef UINT8  uint8
-        ctypedef UINT16 uint16
-        ctypedef UINT32 uint32
-        ctypedef UINT64 uint64
-        ctypedef INT8   int8
-        ctypedef INT16  int16
-        ctypedef INT32  int32
-        ctypedef INT64  int64
-    ELSE:
-        ctypedef uint8_t  uint8
-        ctypedef uint16_t uint16
-        ctypedef uint32_t uint32
-        ctypedef uint64_t uint64
-        ctypedef int8_t   int8
-        ctypedef int16_t  int16
-        ctypedef int32_t  int32
-        ctypedef int64_t  int64
+    ctypedef uint8_t  uint8
+    ctypedef uint16_t uint16
+    ctypedef uint32_t uint32
+    ctypedef uint64_t uint64
+    ctypedef int8_t   int8
+    ctypedef int16_t  int16
+    ctypedef int32_t  int32
+    ctypedef int64_t  int64
 
     ctypedef enum FT4222_STATUS:
         FT4222_OK = 0
