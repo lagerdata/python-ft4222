@@ -244,7 +244,7 @@ cdef class FT4222:
 
         """
         if isinstance(data, int):
-            data = bytes(data)
+            data = bytes([data])
         elif not isinstance(data, (bytes, bytearray)):
             raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
         cdef:
@@ -296,7 +296,7 @@ cdef class FT4222:
 
         """
         if isinstance(data, int):
-            data = bytes(data)
+            data = bytes([data])
         elif not isinstance(data, (bytes, bytearray)):
             raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
         cdef:
