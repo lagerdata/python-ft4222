@@ -31,3 +31,9 @@ Indices and tables
 
 .. automodule:: ft4222.GPIO
     :members:
+
+.. automodule:: ft4222.SPI
+    :members:
+
+.. automodule:: ft4222.SPIMaster
+    :members:
