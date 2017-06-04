@@ -331,3 +331,101 @@ cdef class FT4222:
             return cs
         raise FT4222DeviceError, status
 
+
+    def spi_Reset(self):
+        status = FT4222_SPI_Reset(self.handle);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spi_ResetTransaction(self, spiIdx):
+        status = FT4222_SPI_ResetTransaction(self.handle, spiIdx);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spi_SetDrivingStrength(self, clkStrength, ioStrength, ssoStrength):
+        """Reset the SPI master or slave device.
+
+        Args:
+            clkStrength (ft4222.SPI.DrivingStrength): Driving strength clock pin (master only)
+            ioStrength (ft4222.SPI.DrivingStrength): Driving strength io pin
+            ssoStrength (ft4222.SPI.DrivingStrength): Driving strength sso pin (master only)
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SPI_SetDrivingStrength(self.handle, clkStrength, ioStrength, ssoStrength);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spiMaster_Init(self, mode, clock, cpol, cpha, ssoMap):
+        status = FT4222_SPIMaster_Init(self.handle, mode, clock, cpol, cpha, ssoMap);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spiMaster_SetLines(self, mode):
+        status = FT4222_SPIMaster_SetLines(self.handle, mode);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spiMaster_SingleRead(self, bytesToRead, isEndTransaction):
+        cdef:
+            array[uint8] buf = array('B', [])
+            uint16 bytesRead
+        resize(buf, bytesToRead)
+        status = FT4222_SPIMaster_SingleRead(self.handle, buf.data.as_uchars, bytesToRead, &bytesRead, isEndTransaction)
+        if status == FT4222_OK:
+            resize(buf, bytesRead)
+            return bytes(buf)
+        raise FT4222DeviceError, status
+
+    def spiMaster_SingleWrite(self, data, isEndTransaction):
+        if isinstance(data, int):
+            data = bytes([data])
+        elif not isinstance(data, (bytes, bytearray)):
+            raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
+        cdef:
+            uint16 bytesSent
+            uint8* cdata = data
+        status = FT4222_SPIMaster_SingleWrite(self.handle, cdata, len(data), &bytesSent, isEndTransaction);
+        if status == FT4222_OK:
+            return bytesSent
+        raise FT4222DeviceError, status
+
+    def spiMaster_SingleReadWrite(self, data, isEndTransaction):
+        if isinstance(data, int):
+            data = bytes([data])
+        elif not isinstance(data, (bytes, bytearray)):
+            raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
+        cdef:
+            uint16 sizeTransferred
+            uint8* cdata = data
+            array[uint8] buf = array('B', [])
+        resize(buf, len(data))
+        status = FT4222_SPIMaster_SingleReadWrite(self.handle, buf.data.as_uchars, cdata, len(data), &sizeTransferred, isEndTransaction);
+        if status == FT4222_OK:
+            resize(buf, sizeTransferred)
+            return bytes(buf)
+        raise FT4222DeviceError, status
+
+    def spiMaster_MultiReadWrite(self, singleWrite, multiWrite, bytesToRead, sizeOfRead):
+        if isinstance(singleWrite, int):
+            data = bytes([singleWrite])
+        elif not isinstance(singleWrite, (bytes, bytearray)):
+            raise TypeError("the singleWrite argument must be of type 'int', 'bytes' or 'bytearray'")
+        if isinstance(multiWrite, int):
+            data = bytes([multiWrite])
+        elif not isinstance(multiWrite, (bytes, bytearray)):
+            raise TypeError("the multiWrite argument must be of type 'int', 'bytes' or 'bytearray'")
+        write = singleWrite + multiWrite
+        cdef:
+            uint8* cdata = write
+            array[uint8] buf = array('B', [])
+            uint32 bytesRead
+        resize(buf, bytesToRead)
+        status = FT4222_SPIMaster_MultiReadWrite(self.handle, buf.data.as_uchars, cdata, len(singleWrite), len(multiWrite), bytesToRead, &bytesRead);
+        if status == FT4222_OK:
+            resize(buf, bytesRead)
+            return bytes(buf)
+        raise FT4222DeviceError, status
+

@@ -102,6 +102,38 @@ cdef extern from "libft4222.h":
         DWORD chipVersion
         DWORD dllVersion
 
+    ctypedef enum FT4222_SPIMode:
+        SPI_IO_NONE   = 0
+        SPI_IO_SINGLE = 1
+        SPI_IO_DUAL   = 2
+        SPI_IO_QUAD   = 4
+
+    ctypedef enum FT4222_SPIClock:
+        CLK_NONE    = 0
+        CLK_DIV_2   = 1   # 1/2   System Clock
+        CLK_DIV_4   = 2   # 1/4   System Clock
+        CLK_DIV_8   = 3   # 1/8   System Clock
+        CLK_DIV_16  = 4   # 1/16  System Clock
+        CLK_DIV_32  = 5   # 1/32  System Clock
+        CLK_DIV_64  = 6   # 1/64  System Clock
+        CLK_DIV_128 = 7   # 1/128 System Clock
+        CLK_DIV_256 = 8   # 1/256 System Clock
+        CLK_DIV_512 = 9   # 1/512 System Clock
+
+    ctypedef enum FT4222_SPICPOL:
+        CLK_IDLE_LOW  = 0
+        CLK_IDLE_HIGH = 1
+
+    ctypedef enum FT4222_SPICPHA:
+        CLK_LEADING  = 0
+        CLK_TRAILING = 1
+
+    ctypedef enum SPI_DrivingStrength:
+        DS_4MA  = 0
+        DS_8MA  = 1
+        DS_12MA = 2
+        DS_16MA = 3
+
     FT4222_STATUS FT4222_UnInitialize(FT_HANDLE ftHandle)
     FT4222_STATUS FT4222_SetClock(FT_HANDLE ftHandle, FT4222_ClockRate clk)
     FT4222_STATUS FT4222_GetClock(FT_HANDLE ftHandle, FT4222_ClockRate* clk)
@@ -126,4 +158,15 @@ cdef extern from "libft4222.h":
     FT4222_STATUS FT4222_GPIO_SetInputTrigger(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger trigger)
     FT4222_STATUS FT4222_GPIO_GetTriggerStatus(FT_HANDLE ftHandle, GPIO_Port portNum, uint16* queueSize)
     FT4222_STATUS FT4222_GPIO_ReadTriggerQueue(FT_HANDLE ftHandle, GPIO_Port portNum, GPIO_Trigger* events, uint16 readSize, uint16* sizeofRead)
-    
+    # FT4222 SPI Functions
+    FT4222_STATUS FT4222_SPI_Reset(FT_HANDLE ftHandle);
+    FT4222_STATUS FT4222_SPI_ResetTransaction(FT_HANDLE ftHandle, uint8 spiIdx);
+    FT4222_STATUS FT4222_SPI_SetDrivingStrength(FT_HANDLE ftHandle, SPI_DrivingStrength clkStrength, SPI_DrivingStrength ioStrength, SPI_DrivingStrength ssoStrength);
+    FT4222_STATUS FT4222_SPIMaster_Init(FT_HANDLE ftHandle, FT4222_SPIMode  ioLine, FT4222_SPIClock clock, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha, uint8 ssoMap);
+    FT4222_STATUS FT4222_SPIMaster_SetLines(FT_HANDLE ftHandle, FT4222_SPIMode spiMode);
+    FT4222_STATUS FT4222_SPIMaster_SingleRead(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead, BOOL isEndTransaction);
+    FT4222_STATUS FT4222_SPIMaster_SingleWrite(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
+    FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
+    FT4222_STATUS FT4222_SPIMaster_MultiReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint8 singleWriteBytes, uint16 multiWriteBytes, uint16 multiReadBytes, uint32* sizeOfRead);
+
+
