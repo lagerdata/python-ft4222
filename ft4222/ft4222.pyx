@@ -359,6 +359,19 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def spiMaster_Init(self, mode, clock, cpol, cpha, ssoMap):
+        """Initialize as an SPI master under all modes.
+
+        Args:
+            mode (ft4222.SPIMaster.Mode):
+            clock (ft4222.SPIMaster.Clock):
+            cpol (ft4222.SPIMaster.Cpol):
+            cpha (ft4222.SPIMaster.Cpha):
+            ssoMap:
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_SPIMaster_Init(self.handle, mode, clock, cpol, cpha, ssoMap);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
