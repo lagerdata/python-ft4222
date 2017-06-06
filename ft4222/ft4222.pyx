@@ -9,7 +9,10 @@ from ft4222.cftd2xx cimport *
 from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
+from ft4222.GPIO import Dir, Trigger
 
+cdef extern from "<alloca.h>" nogil:
+    void *alloca(size_t size)
 
 __ftd2xx_msgs = ['OK', 'INVALID_HANDLE', 'DEVICE_NOT_FOUND', 'DEVICE_NOT_OPENED',
                  'IO_ERROR', 'INSUFFICIENT_RESOURCES', 'INVALID_PARAMETER',
@@ -193,6 +196,65 @@ cdef class FT4222:
 
     def __repr__(self):
         return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self.chip_version, self.chipRevision(), self.dll_version)
+
+
+    def gpio_Init(self, *args, gpio0=Dir.INPUT, gpio1=Dir.INPUT, gpio2=Dir.INPUT, gpio3=Dir.INPUT):
+        cdef:
+            GPIO_Dir ioDir[4]
+        if len(args) > 0:
+            for i in xrange(len(args)):
+                ioDir[i] = args[i]
+            for i in xrange(len(args), 4 - len(args)):
+                ioDir[i] = GPIO_OUTPUT
+        else:
+            ioDir[0] = gpio0
+            ioDir[1] = gpio1
+            ioDir[2] = gpio2
+            ioDir[3] = gpio3
+        status = FT4222_GPIO_Init(self.handle, ioDir)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def gpio_Read(self, portNum):
+        cdef:
+            BOOL value
+        status = FT4222_GPIO_Read(self.handle, portNum, &value)
+        if status == FT4222_OK:
+            return value
+        raise FT4222DeviceError, status
+
+    def gpio_Write(self, portNum, value):
+        status = FT4222_GPIO_Write(self.handle, portNum, value)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def gpio_SetInputTrigger(self, portNum, trigger):
+        status = FT4222_GPIO_SetInputTrigger(self.handle, portNum, trigger)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def gpio_GetTriggerStatus(self, portNum):
+        cdef:
+            uint16 queueSize
+        status = FT4222_GPIO_GetTriggerStatus(self.handle, portNum, &queueSize)
+        if status == FT4222_OK:
+            return queueSize
+        raise FT4222DeviceError, status
+
+    def gpio_ReadTriggerQueue(self, portNum, readSize=None):
+        if readSize == None:
+            self.gpio_GetTriggerStatus(portNum)
+        cdef:
+            GPIO_Trigger *events = <GPIO_Trigger*>alloca(portNum * sizeof(GPIO_Trigger))
+            uint16 sizeRead
+        status = FT4222_GPIO_ReadTriggerQueue(self.handle, portNum, events, readSize, &sizeRead)
+        if status == FT4222_OK:
+            res = []
+            for i in xrange(readSize):
+                res.append(Trigger(events[i]))
+            return res
+        raise FT4222DeviceError, status
+
 
     def i2cMaster_Init(self, kbps=100):
         """Initialize the FT4222H as an I2C master with the requested I2C speed.
