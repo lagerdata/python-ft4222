@@ -199,6 +199,19 @@ cdef class FT4222:
 
 
     def gpio_Init(self, *args, gpio0=Dir.INPUT, gpio1=Dir.INPUT, gpio2=Dir.INPUT, gpio3=Dir.INPUT):
+        """Initialize the GPIO interface.
+
+        Args:
+            *args (list, optional): List containing a direction "(ft4222.GPIO.Dir)" for each port.
+            gpio0 (ft4222.GPIO.Dir): Direction of gpio0
+            gpio1 (ft4222.GPIO.Dir): Direction of gpio1
+            gpio2 (ft4222.GPIO.Dir): Direction of gpio2
+            gpio3 (ft4222.GPIO.Dir): Direction of gpio3
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             GPIO_Dir ioDir[4]
         if len(args) > 0:
