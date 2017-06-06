@@ -11,6 +11,7 @@ Open a handle using one of the ft4222.openBy... functions and use the methods
 on the object thus returned.
 """
 
+from __future__ import absolute_import
 from ft4222.ft4222 import *
 from ft4222 import *
 
