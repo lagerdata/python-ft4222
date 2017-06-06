@@ -5,9 +5,9 @@ pages:
   - apk --no-cache add py2-pip python-dev
   - pip install sphinx
   - apk --no-cache add build-base cython
-  - build-linux.sh
+  - ./build-linux.sh
   - cd doc
-  - doc-linux.sh
+  - ./doc-linux.sh
   - mv _build/html/ public/
   artifacts:
     paths:
