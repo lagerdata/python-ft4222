@@ -1,0 +1,16 @@
+image: alpine
+
+pages:
+  script:
+  - apk --no-cache add py2-pip python-dev
+  - pip install sphinx
+  - apk --no-cache add build-base cython cython-dev
+  - CFLAGS=-Ilinux LDFLAGS=-Llinux/build-x86_64/ python setup.py build_ext -i
+  - cd doc
+  - LD_LIBRARY_PATH=../linux/build-x86_64/. PYTHONPATH=.. make html 
+  - mv _build/html/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
