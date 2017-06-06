@@ -9,7 +9,7 @@ from ft4222.cftd2xx cimport *
 from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
-from ft4222.GPIO import Dir, Trigger
+from GPIO import Dir, Trigger
 
 cdef extern from "<alloca.h>" nogil:
     void *alloca(size_t size)
