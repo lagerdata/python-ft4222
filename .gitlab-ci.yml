@@ -5,10 +5,9 @@ pages:
   - apk --no-cache add py2-pip python-dev
   - pip install sphinx
   - apk --no-cache add build-base cython
-  - ./build-linux.sh
-  - cd doc
-  - ./doc-linux.sh
-  - mv _build/html/ public/
+  - CFLAGS=-Ilinux LDFLAGS=-Llinux/build-x86_64/ python setup.py build_ext -i
+  - LD_LIBRARY_PATH=linux/build-x86_64/. PYTHONPATH=. make -C doc html 
+  - mv doc/_build/html/ public/
   artifacts:
     paths:
     - public
