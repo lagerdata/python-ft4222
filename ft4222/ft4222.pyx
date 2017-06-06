@@ -154,6 +154,9 @@ cdef class FT4222:
 
     def close(self):
         """Closes the device."""
+        status = FT4222_UnInitialize(self.handle)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
         status = FT_Close(self.handle)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
