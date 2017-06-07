@@ -390,6 +390,10 @@ cdef class FT4222:
 
         If the I2C bus encounters errors or works abnormally, this function will reset the I2C device.
         It is not necessary to call I2CMaster_Init again after calling this reset function.
+
+        Raises:
+            FT4222DeviceError: on error
+
         """
         status = FT4222_I2CMaster_Reset(self.handle)
         if status != FT4222_OK:
@@ -402,6 +406,10 @@ cdef class FT4222:
 
         Returns:
             ft4222.I2CMaster.ControllerStatus: Controller status
+
+        Raises:
+            FT4222DeviceError: on error
+
         """
         cdef uint8 cs
         status = FT4222_I2CMaster_GetStatus(self.handle, &cs)
@@ -411,11 +419,26 @@ cdef class FT4222:
 
 
     def spi_Reset(self):
+        """Reset the SPI master or slave device
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_SPI_Reset(self.handle);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
     def spi_ResetTransaction(self, spiIdx):
+        """Reset the SPI transaction
+
+        Args:
+            spiIdx (int): The index of the SPI transaction, which ranges from 0~3 depending on the mode of the chip.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_SPI_ResetTransaction(self.handle, spiIdx);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
@@ -440,11 +463,11 @@ cdef class FT4222:
         """Initialize as an SPI master under all modes.
 
         Args:
-            mode (ft4222.SPIMaster.Mode):
-            clock (ft4222.SPIMaster.Clock):
-            cpol (ft4222.SPIMaster.Cpol):
-            cpha (ft4222.SPIMaster.Cpha):
-            ssoMap:
+            mode (ft4222.SPIMaster.Mode): SPI transmission lines / mode
+            clock (ft4222.SPIMaster.Clock): Clock divider
+            cpol (ft4222.SPIMaster.Cpol): Clock polarity
+            cpha (ft4222.SPIMaster.Cpha): Clock phase
+            ssoMap (ft4222.SPIMaster.SlaveSelect): Slave selection output pins
 
         Raises:
             FT4222DeviceError: on error
@@ -455,11 +478,36 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def spiMaster_SetLines(self, mode):
+        """Switch the FT4222H SPI master to single, dual, or quad mode.
+
+        This overrides the mode passed to FT4222_SPIMaster_init. This might be needed if a
+        device accepts commands in single mode but data transfer is to use dual or quad mode.
+
+        Args:
+            mode (ft4222.SPIMaster.Mode): SPI transmission lines / mode
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_SPIMaster_SetLines(self.handle, mode);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
     def spiMaster_SingleRead(self, bytesToRead, isEndTransaction):
+        """Read data from an SPI slave in single mode
+
+        Args:
+            bytesToRead (int): Number of bytes to read
+            isEndTransaction (boolean): If True the slave select pin will be raised at the end
+
+        Returns:
+            (bytes): Bytes read from slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
@@ -471,6 +519,19 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def spiMaster_SingleWrite(self, data, isEndTransaction):
+        """Write data to an SPI slave in single mode
+
+        Args:
+            data (bytes, bytearray, int): Data to write to slave
+            isEndTransaction (boolean): If True the slave select pin will be raised at the end
+
+        Returns:
+            (int): Bytes sent to slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if isinstance(data, int):
             data = bytes([data])
         elif not isinstance(data, (bytes, bytearray)):

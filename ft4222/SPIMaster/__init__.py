@@ -11,10 +11,10 @@ class Mode(IntEnum):
     """SPIMaster Mode
 
     Attributes:
-        SPI_IO_NONE:
-        SPI_IO_SINGLE:
-        SPI_IO_DUAL:
-        SPI_IO_QUAD:
+        SPI_IO_NONE: No IOs
+        SPI_IO_SINGLE: Single mode
+        SPI_IO_DUAL: Dual mode
+        SPI_IO_QUAD: Quad mode
 
     """
     NONE   = 0
@@ -53,8 +53,8 @@ class Cpol(IntEnum):
     """SPIMaster Polarisation
 
     Attributes:
-        IDLE_LOW:
-        IDLE_HIGH:
+        IDLE_LOW: Idle low
+        IDLE_HIGH: Idle high
 
     """
     IDLE_LOW  = 0
@@ -64,8 +64,8 @@ class Cpha(IntEnum):
     """SPIMaster Phase
 
     Attributes:
-        LEADING:
-        TRAILING:
+        LEADING: Leading phase
+        TRAILING: Trailing phase
 
     """
     CLK_LEADING  = 0
