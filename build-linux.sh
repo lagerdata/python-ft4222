@@ -9,4 +9,8 @@ case "$unamem" in
 	*) echo "Libft4222 is not currently supported on '$unamem'."; exit 1 ;;
 esac
 
-CFLAGS=-Ilinux LDFLAGS=-Llinux/build-${platform}/ python setup.py build_ext -i
+if [[ -z $1 ]]; then
+	CFLAGS=-Ilinux LDFLAGS=-Llinux/build-${platform}/ python setup.py build_ext -i
+else
+	CFLAGS=-Ilinux LDFLAGS=-Llinux/build-${platform}/ python setup.py $@
+fi

@@ -9,4 +9,8 @@ case "$unamem" in
 	*) echo "Libft4222 is not currently supported on '$unamem'."; exit 1 ;;
 esac
 
-LD_LIBRARY_PATH=linux/build-${platform}/. PYTHONPATH=. python3 test.py
+if [[ -z $1 ]]; then
+	LD_LIBRARY_PATH=linux/build-${platform}/. PYTHONPATH=. python test.py
+else
+	LD_LIBRARY_PATH=linux/build-${platform}/. PYTHONPATH=. python $@
+fi
