@@ -70,3 +70,18 @@ class Cpha(IntEnum):
     """
     CLK_LEADING  = 0
     CLK_TRAILING = 1
+
+class SlaveSelect(IntEnum):
+    """Slave Slave bitmap
+
+    Attributes:
+        SS0: Slave select 0
+        SS1: Slave select 1
+        SS2: Slave select 2
+        SS3: Slave select 3
+
+    """
+    SS0 = 1<<0
+    SS1 = 1<<1
+    SS2 = 1<<2
+    SS3 = 1<<3
