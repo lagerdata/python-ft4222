@@ -104,7 +104,7 @@ def openByDescription(desc):
         desc (bytes, str): Description of the device
 
     Returns:
-        FT4222: Opened device
+        :obj:`FT4222`: Opened device
 
     Raises:
         FT2XXDeviceError: on error
@@ -127,7 +127,7 @@ def openByLocation(locId):
         locId (int): Location id
 
     Returns:
-        FT4222: Opened device
+        :obj:`FT4222`: Opened device
 
     Raises:
         FT2XXDeviceError: on error
@@ -202,11 +202,11 @@ cdef class FT4222:
         """Initialize the GPIO interface.
 
         Args:
-            *args (list, optional): List containing a direction "(ft4222.GPIO.Dir)" for each port.
-            gpio0 (ft4222.GPIO.Dir): Direction of gpio0
-            gpio1 (ft4222.GPIO.Dir): Direction of gpio1
-            gpio2 (ft4222.GPIO.Dir): Direction of gpio2
-            gpio3 (ft4222.GPIO.Dir): Direction of gpio3
+            *args (:obj:`list` of :obj:`ft4222.GPIO.Dir`, optional): List containing a direction for each port.
+            gpio0 (:obj:`ft4222.GPIO.Dir`, optional): Direction of gpio0
+            gpio1 (:obj:`ft4222.GPIO.Dir`, optional): Direction of gpio1
+            gpio2 (:obj:`ft4222.GPIO.Dir`, optional): Direction of gpio2
+            gpio3 (:obj:`ft4222.GPIO.Dir`, optional): Direction of gpio3
 
         Raises:
             FT4222DeviceError: on error
@@ -229,6 +229,18 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def gpio_Read(self, portNum):
+        """Read value from selected GPIO
+
+        Args:
+            portNum (:obj:`ft4222.GPIO.Port`): GPIO Port number
+
+        Returns:
+            bool: True if high, False otherwise
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             BOOL value
         status = FT4222_GPIO_Read(self.handle, portNum, &value)
@@ -237,16 +249,48 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def gpio_Write(self, portNum, value):
+        """Write value to given GPIO
+
+        Args:
+            portNum (:obj:`ft4222.GPIO.Port`): GPIO Port number
+            value (bool): True for high, False for low
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_GPIO_Write(self.handle, portNum, value)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
     def gpio_SetInputTrigger(self, portNum, trigger):
+        """Set software trigger conditions on the specified GPIO pin.
+
+        Args:
+            portNum (:obj:`ft4222.GPIO.Port`): GPIO Port number
+            trigger (:obj:`ft4222.GPIO.Trigger`): Combination of trigger conditions
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         status = FT4222_GPIO_SetInputTrigger(self.handle, portNum, trigger)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
     def gpio_GetTriggerStatus(self, portNum):
+        """Get the size of trigger event queue.
+
+        Args:
+            portNum (:obj:`ft4222.GPIO.Port`): GPIO Port number
+
+        Returns:
+            int: Size of the trigger queue
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         cdef:
             uint16 queueSize
         status = FT4222_GPIO_GetTriggerStatus(self.handle, portNum, &queueSize)
@@ -255,6 +299,19 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def gpio_ReadTriggerQueue(self, portNum, readSize=None):
+        """Get events recorded in the trigger event queue.
+
+        Args:
+            portNum (:obj:`ft4222.GPIO.Port`): GPIO Port number
+            readSize (:obj:`int`, optional): Size of the queue, :obj:`gpio_GetTriggerStatus()` gets called if omitted
+
+        Returns:
+            :obj:`list` of :obj:`ft4222.GPIO.Trigger`: Trigger queue as list
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if readSize == None:
             self.gpio_GetTriggerStatus(portNum)
         cdef:
@@ -338,7 +395,7 @@ cdef class FT4222:
 
         Args:
             addr (int): I2C slave address
-            flag (ft4222.I2CMaster.Flag): Flag to control start- and stopbit generation
+            flag (:obj:`ft4222.I2CMaster.Flag`): Flag to control start- and stopbit generation
             bytesToRead (int): Number of bytes to read from slave
 
         Returns:
@@ -363,7 +420,7 @@ cdef class FT4222:
 
         Args:
             addr (int): I2C slave address
-            flag (ft4222.I2CMaster.Flag): Flag to control start- and stopbit generation
+            flag (:obj:`ft4222.I2CMaster.Flag`): Flag to control start- and stopbit generation
             data (int, bytes, bytearray): Data to write to slave
 
         Returns:
@@ -405,7 +462,7 @@ cdef class FT4222:
         This can be used to poll a slave until its write-cycle is complete.
 
         Returns:
-            ft4222.I2CMaster.ControllerStatus: Controller status
+            :obj:`ft4222.I2CMaster.ControllerStatus`: Controller status
 
         Raises:
             FT4222DeviceError: on error
@@ -447,9 +504,9 @@ cdef class FT4222:
         """Reset the SPI master or slave device.
 
         Args:
-            clkStrength (ft4222.SPI.DrivingStrength): Driving strength clock pin (master only)
-            ioStrength (ft4222.SPI.DrivingStrength): Driving strength io pin
-            ssoStrength (ft4222.SPI.DrivingStrength): Driving strength sso pin (master only)
+            clkStrength (:obj:`ft4222.SPI.DrivingStrength`): Driving strength clock pin (master only)
+            ioStrength (:obj:`ft4222.SPI.DrivingStrength`): Driving strength io pin
+            ssoStrength (:obj:`ft4222.SPI.DrivingStrength`): Driving strength sso pin (master only)
 
         Raises:
             FT4222DeviceError: on error
@@ -463,11 +520,11 @@ cdef class FT4222:
         """Initialize as an SPI master under all modes.
 
         Args:
-            mode (ft4222.SPIMaster.Mode): SPI transmission lines / mode
-            clock (ft4222.SPIMaster.Clock): Clock divider
-            cpol (ft4222.SPIMaster.Cpol): Clock polarity
-            cpha (ft4222.SPIMaster.Cpha): Clock phase
-            ssoMap (ft4222.SPIMaster.SlaveSelect): Slave selection output pins
+            mode (:obj:`ft4222.SPIMaster.Mode`): SPI transmission lines / mode
+            clock (:obj:`ft4222.SPIMaster.Clock`): Clock divider
+            cpol (:obj:`ft4222.SPIMaster.Cpol`): Clock polarity
+            cpha (:obj:`ft4222.SPIMaster.Cpha`): Clock phase
+            ssoMap (:obj:`ft4222.SPIMaster.SlaveSelect`): Slave selection output pins
 
         Raises:
             FT4222DeviceError: on error
@@ -484,7 +541,7 @@ cdef class FT4222:
         device accepts commands in single mode but data transfer is to use dual or quad mode.
 
         Args:
-            mode (ft4222.SPIMaster.Mode): SPI transmission lines / mode
+            mode (:obj:`ft4222.SPIMaster.Mode`): SPI transmission lines / mode
 
         Raises:
             FT4222DeviceError: on error
@@ -499,10 +556,10 @@ cdef class FT4222:
 
         Args:
             bytesToRead (int): Number of bytes to read
-            isEndTransaction (boolean): If True the slave select pin will be raised at the end
+            isEndTransaction (bool): If True the slave select pin will be raised at the end
 
         Returns:
-            (bytes): Bytes read from slave
+            bytes: Bytes read from slave
 
         Raises:
             FT4222DeviceError: on error
@@ -523,10 +580,10 @@ cdef class FT4222:
 
         Args:
             data (bytes, bytearray, int): Data to write to slave
-            isEndTransaction (boolean): If True the slave select pin will be raised at the end
+            isEndTransaction (bool): If True the slave select pin will be raised at the end
 
         Returns:
-            (int): Bytes sent to slave
+            int: Bytes sent to slave
 
         Raises:
             FT4222DeviceError: on error
