@@ -11,8 +11,13 @@ from cpython.array cimport array, resize
 from libc.stdio cimport printf
 from GPIO import Dir, Trigger
 
-cdef extern from "<alloca.h>" nogil:
-    void *alloca(size_t size)
+IF UNAME_SYSNAME == "Windows":
+    cdef extern from "<malloc.h>" nogil:
+        void *alloca(size_t size)
+ELSE:
+    cdef extern from "<alloca.h>" nogil:
+        void *alloca(size_t size)
+
 
 __ftd2xx_msgs = ['OK', 'INVALID_HANDLE', 'DEVICE_NOT_FOUND', 'DEVICE_NOT_OPENED',
                  'IO_ERROR', 'INSUFFICIENT_RESOURCES', 'INVALID_PARAMETER',
