@@ -37,4 +37,4 @@ class SysClock(IntEnum):
     CLK_60 = 0
     CLK_24 = 1
     CLK_48 = 2
-    CLK_80 = 4
+    CLK_80 = 3
