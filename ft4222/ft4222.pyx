@@ -10,7 +10,7 @@ from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
 from GPIO import Dir, Trigger
-from . import SysClock
+from __init__ import SysClock
 
 IF UNAME_SYSNAME == "Windows":
     cdef extern from "<malloc.h>" nogil:
