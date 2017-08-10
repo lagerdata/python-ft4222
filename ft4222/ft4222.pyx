@@ -10,6 +10,7 @@ from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
 from GPIO import Dir, Trigger
+from . import SysClock
 
 IF UNAME_SYSNAME == "Windows":
     cdef extern from "<malloc.h>" nogil:
@@ -202,6 +203,35 @@ cdef class FT4222:
     def __repr__(self):
         return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self.chip_version, self.chipRevision(), self.dll_version)
 
+    def setClock(self, clk):
+        """Set the system clock
+
+        Args:
+            clk (:obj:`ft4222.SysClock`): Desired clock
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SetClock(self.handle, clk)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def getClock(self):
+        """Get the system clock
+
+        Returns:
+            :obj:`ft4222.SysClock`: Clock
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef FT4222_ClockRate clk
+        status = FT4222_GetClock(self.handle, &clk)
+        if status == FT4222_OK:
+            return SysClock(clk)
+        raise FT4222DeviceError, status
 
     def gpio_Init(self, *args, gpio0=Dir.INPUT, gpio1=Dir.INPUT, gpio2=Dir.INPUT, gpio3=Dir.INPUT):
         """Initialize the GPIO interface.
