@@ -253,7 +253,7 @@ cdef class FT4222:
             for i in xrange(len(args)):
                 ioDir[i] = args[i]
             for i in xrange(len(args), 4 - len(args)):
-                ioDir[i] = GPIO_OUTPUT
+                ioDir[i] = GPIO_INPUT
         else:
             ioDir[0] = gpio0
             ioDir[1] = gpio1
