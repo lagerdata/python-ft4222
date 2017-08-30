@@ -233,6 +233,34 @@ cdef class FT4222:
             return SysClock(clk)
         raise FT4222DeviceError, status
 
+    def setSuspendOut(self, enable):
+        """Enable or disable, suspend out, which will emit a signal when FT4222H enters suspend mode.
+
+        Args:
+            enable (bool): TRUE to enable suspend out and configure GPIO2 as an output pin for emitting a signal when suspended. FALSE to switch back to GPIO2
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SetSuspendOut(self.handle, enable)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def setWakeUpInterrut(self, enable):
+        """Enable or disable the wakeup/interrupt
+
+        Args:
+            enable (bool): True to configure GPIO3 as an input pin for wakeup/interrupt. FALSE to switch back to GPIO3.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SetWakeUpInterrupt(self.handle, enable)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
     def gpio_Init(self, *args, gpio0=Dir.INPUT, gpio1=Dir.INPUT, gpio2=Dir.INPUT, gpio3=Dir.INPUT):
         """Initialize the GPIO interface.
 
