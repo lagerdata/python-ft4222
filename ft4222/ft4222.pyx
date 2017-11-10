@@ -261,6 +261,31 @@ cdef class FT4222:
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
+
+    def vendorCmdGet(self, req, bytesToRead):
+        """Vendor get command"""
+        cdef:
+            array[uint8] buf = array('B', [])
+        resize(buf, bytesToRead)
+        status = FT_VendorCmdGet(self.handle, req, buf.data.as_uchars, bytesToRead)
+        if status == FT_OK:
+            return bytes(buf)
+        raise FT4222DeviceError, status
+
+    def vendorCmdSet(self, req, data):
+        """Vendor set command"""
+        if isinstance(data, int):
+            data = bytes([data])
+        elif not isinstance(data, (bytes, bytearray)):
+            raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
+        cdef:
+            uint16 bytesSent
+            uint8* cdata = data
+        status = FT_VendorCmdSet(self.handle, req, cdata, len(data))
+        if status != FT_OK:
+            raise FT4222DeviceError, status
+
+
     def gpio_Init(self, *args, gpio0=Dir.INPUT, gpio1=Dir.INPUT, gpio2=Dir.INPUT, gpio3=Dir.INPUT):
         """Initialize the GPIO interface.
 
