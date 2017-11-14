@@ -427,6 +427,21 @@ cdef class FT4222:
         status = FT4222_I2CMaster_Init(self.handle, kbps)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
+        # current version (v1.3) of ftdi's lib can only handle clock rates down to 60kHz
+        # although the chip can handle clock rates down to ~23.6kHz
+        # there's a undocumented ways to achieve this
+        if kbps < 60:
+            #             Operating Clock Freq
+            # SCL Freq = -----------------------  | M = 6 or 8; N = 1, 2, 3, …, 127
+            #                 M*(N+1)
+            #
+            #       Operating Clock Freq             24MHz
+            # N =  ---------------------- - 1   => ---------- - 1
+            #            M * SCL Freq               8 * kbps
+            #
+            n = max(min(int(round(24000000.0 / (8 * 1000 * kbps) - 1)), 127), 1)
+            self.setClock(SysClock.CLK_24)
+            self.vendorCmdSet(0x52, n)
 
     def i2cMaster_Read(self, addr, bytesToRead):
         """Read data from the specified I2C slave device with START and STOP conditions.
