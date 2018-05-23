@@ -705,6 +705,19 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def spiMaster_SingleReadWrite(self, data, isEndTransaction):
+        """Write and read data to and from a SPI slave in single mode
+
+        Args:
+            data (bytes, bytearray, int): Data to write to slave
+            isEndTransaction (bool): If True the slave select pin will be raised at the end
+
+        Returns:
+            bytes: Bytes read from slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if isinstance(data, int):
             data = bytes([data])
         elif not isinstance(data, (bytes, bytearray)):
@@ -720,7 +733,21 @@ cdef class FT4222:
             return bytes(buf)
         raise FT4222DeviceError, status
 
-    def spiMaster_MultiReadWrite(self, singleWrite, multiWrite, bytesToRead, sizeOfRead):
+    def spiMaster_MultiReadWrite(self, singleWrite, multiWrite, bytesToRead):
+        """Write and read data to and from a SPI slave in dual- or quad-mode (multi-mode).
+
+        Args:
+            singleWrite (bytes, bytearray, int): Data to write to slave in signle-line mode (max. 15 bytes)
+            multiWrite (bytes, bytearray, int): Data to write to slave in multi-line mode (max. 65535 bytes)
+            bytesToRead (int):  Number of bytes to read on multi-line (max. 65535 bytes.
+
+        Returns:
+            bytes: Bytes read from slave in multi-line mode
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
         if isinstance(singleWrite, int):
             data = bytes([singleWrite])
         elif not isinstance(singleWrite, (bytes, bytearray)):
