@@ -655,7 +655,7 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def spiMaster_SingleRead(self, bytesToRead, isEndTransaction):
-        """Read data from an SPI slave in single mode
+        """Read data from a SPI slave in single mode
 
         Args:
             bytesToRead (int): Number of bytes to read
@@ -679,7 +679,7 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def spiMaster_SingleWrite(self, data, isEndTransaction):
-        """Write data to an SPI slave in single mode
+        """Write data to a SPI slave in single mode
 
         Args:
             data (bytes, bytearray, int): Data to write to slave
