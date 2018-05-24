@@ -64,8 +64,8 @@ class Cpha(IntEnum):
     """SPIMaster Phase
 
     Attributes:
-        LEADING: Leading phase
-        TRAILING: Trailing phase
+        CLK_LEADING: Leading phase
+        CLK_TRAILING: Trailing phase
 
     """
     CLK_LEADING  = 0
