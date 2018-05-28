@@ -768,3 +768,16 @@ cdef class FT4222:
             return bytes(buf)
         raise FT4222DeviceError, status
 
+    def spiMaster_EndTransaction(self):
+        """End the current SPI transaction.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef:
+            DWORD bytesSent;
+        status = FT_Write(self.handle, <unsigned char*>NULL, 0, &bytesSent);
+        if status == FT_OK:
+            return
+        raise FT4222DeviceError, status
