@@ -49,14 +49,14 @@ setup(
     url='https://msrelectronics.gitlab.io/python-ft4222',
     description='Python wrapper around libFT4222.',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
-    ext_modules = [
+    ext_modules=[
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
                   libraries=libs,
                   include_dirs=incdirs,
                   library_dirs=libdirs,
                   extra_compile_args=["-O3"],
-                  )
+                 )
     ],
-    cmdclass = {'install': myinstall, 'build_ext': build_ext},
-    package_data= {'ft4222': libs_to_copy},
+    cmdclass={'install': myinstall, 'build_ext': build_ext},
+    package_data={'ft4222': libs_to_copy},
 )
