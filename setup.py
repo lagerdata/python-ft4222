@@ -5,7 +5,7 @@
 # MSR Electronics GmbH
 #
 
-from distutils.core import setup
+from setuptools import setup
 from distutils.extension import Extension
 from distutils.command.install import install
 from Cython.Distutils import build_ext
