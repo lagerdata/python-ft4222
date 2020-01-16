@@ -44,10 +44,10 @@ class myinstall(install):
 setup(
     name='ft4222',
     version='0.1',
-    author='Martin Gysel',
+    author='Bearsh',
     author_email='me@bearsh.org',
-    url='http://msr.ch',
-    description='python wrapper around libFT4222',
+    url='https://msrelectronics.gitlab.io/python-ft4222',
+    description='Python wrapper around libFT4222.',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
     ext_modules = [
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
