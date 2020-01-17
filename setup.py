@@ -3,6 +3,7 @@
 # |_| | |__   |    -|
 # |_|_|_|_____|__|__|
 # MSR Electronics GmbH
+# SPDX-License-Identifier: MIT
 #
 
 from setuptools import setup
@@ -48,6 +49,20 @@ setup(
     author_email='me@bearsh.org',
     url='https://msrelectronics.gitlab.io/python-ft4222',
     description='Python wrapper around libFT4222.',
+    license='MIT',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'License :: OSI Approved :: MIT License',
+        'License :: Other/Proprietary License',
+        'Operating System :: Microsoft',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Cython',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Topic :: Communications',
+    ],
+    keywords='ftdi ft4222',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
     ext_modules=[
         Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
