@@ -5,3 +5,5 @@ ft4222/*.dll
 build/
 __pycache__/
 /MANIFEST
+/dist
+/ft4222.egg*
