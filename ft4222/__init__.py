@@ -12,6 +12,13 @@ on the object thus returned.
 """
 
 from __future__ import absolute_import
+from sys import platform
+
+if platform.startswith("linux"):
+    from os import path
+    from ctypes import cdll
+    libft4222 = cdll.LoadLibrary(path.dirname(path.abspath(__file__)) + '/libft4222.so')
+
 from ft4222.ft4222 import *
 from ft4222 import *
 from enum import IntEnum
