@@ -5,6 +5,7 @@
 # MSR Electronics GmbH
 # SPDX-License-Identifier: MIT
 #
+#cython: language_level=2
 
 from ft4222.cftd2xx cimport *
 from ft4222.clibft4222 cimport *
