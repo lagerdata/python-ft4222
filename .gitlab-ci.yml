@@ -1,12 +1,11 @@
-image: alpine
+image: alpine:3.11
 
 pages:
   script:
-  - apk --no-cache add py2-pip python-dev
-  - pip install sphinx enum34
-  - apk --no-cache add build-base cython cython-dev
-  - CFLAGS=-Ilinux LDFLAGS=-Llinux/build-x86_64/ python setup.py build_ext -i
-  - LD_LIBRARY_PATH=../linux/build-x86_64/. PYTHONPATH=.. make -C doc/ html 
+  - apk --no-cache add build-base python3 python3-dev cython
+  - pip3 install sphinx
+  - python3 setup.py build_ext install
+  - make html
   - mv doc/_build/html/ public/
   artifacts:
     paths:
