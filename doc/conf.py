@@ -49,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ft4222'
-copyright = '2017, Martin Gysel'
-author = 'Martin Gysel'
+copyright = '2016 - 2020, M. Gysel & MSR Electronics GmbH'
+author = 'Bearsh'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
