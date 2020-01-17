@@ -2,10 +2,9 @@ image: alpine:3.11
 
 pages:
   script:
-  - apk --no-cache add build-base python3 python3-dev cython
-  - pip3 install sphinx
+  - apk --no-cache add build-base python3 python3-dev cython py3-sphinx
   - python3 setup.py build_ext install
-  - make html
+  - make -C doc html
   - mv doc/_build/html/ public/
   artifacts:
     paths:
