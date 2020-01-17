@@ -3,6 +3,7 @@
 # |_| | |__   |    -|
 # |_|_|_|_____|__|__|
 # MSR Electronics GmbH
+# SPDX-License-Identifier: MIT
 #
 
 """Control FTDI USB chips for I2C/SPI/GPIO.
