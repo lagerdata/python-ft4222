@@ -5,6 +5,7 @@
 # MSR Electronics GmbH
 # SPDX-License-Identifier: MIT
 #
+#cython: language_level=2
 
 from libc.stdint cimport *
 from cftd2xx cimport *
@@ -71,24 +72,24 @@ cdef extern from "libft4222.h":
         SYS_CLK_24 = 1
         SYS_CLK_48 = 2
         SYS_CLK_80 = 3
-    
+
     ctypedef enum I2C_MasterFlag:
         NONE = 0x80
         START = 0x02
         Repeated_START = 0x03  # Repeated_START will not send master code in HS mode
         STOP  = 0x04
         START_AND_STOP = 0x06  # START condition followed by SEND and STOP condition
-    
+
     ctypedef enum GPIO_Trigger:
         GPIO_TRIGGER_RISING         = 0x01
         GPIO_TRIGGER_FALLING        = 0x02
         GPIO_TRIGGER_LEVEL_HIGH     = 0x04
         GPIO_TRIGGER_LEVEL_LOW      = 0X08
-        
+
     ctypedef enum GPIO_Output:
         GPIO_OUTPUT_LOW = 0
         GPIO_OUTPUT_HIGH = 1
-        
+
     ctypedef enum GPIO_Port:
         GPIO_PORT0  = 0
         GPIO_PORT1  = 1
@@ -98,7 +99,7 @@ cdef extern from "libft4222.h":
     ctypedef enum GPIO_Dir:
         GPIO_OUTPUT = 0
         GPIO_INPUT  = 1
-    
+
     ctypedef struct FT4222_Version:
         DWORD chipVersion
         DWORD dllVersion

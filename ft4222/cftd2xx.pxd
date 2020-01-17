@@ -5,6 +5,7 @@
 # MSR Electronics GmbH
 # SPDX-License-Identifier: MIT
 #
+#cython: language_level=2
 
 cdef extern from "ftd2xx.h":
     ctypedef unsigned int DWORD
