@@ -13,16 +13,15 @@ on the object thus returned.
 """
 
 from __future__ import absolute_import
-from sys import platform
+from enum import IntEnum
 
-if platform.startswith("linux"):
-    from os import path
-    from ctypes import cdll
-    libft4222 = cdll.LoadLibrary(path.dirname(path.abspath(__file__)) + '/libft4222.so')
-
+# change to directory of current file as libft4222 should be located there
+from os import path, getcwd, chdir
+current = getcwd()
+chdir(path.dirname(path.abspath(__file__)))
 from ft4222.ft4222 import *
 from ft4222 import *
-from enum import IntEnum
+chdir(current)
 
 __all__ = [
     'createDeviceInfoList',

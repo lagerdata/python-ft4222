@@ -70,6 +70,7 @@ setup(
                   include_dirs=incdirs,
                   library_dirs=libdirs,
                   extra_compile_args=["-O3"],
+                  runtime_library_dirs=['./'],
                  )
     ],
     cmdclass={'install': myinstall, 'build_ext': build_ext},
