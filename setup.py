@@ -23,6 +23,7 @@ if os_name.startswith("linux"):
     else:
         libdir = "linux/build-pentium"
     libdirs = [libdir]
+    rlibdirs = ['./']
     libs_to_copy = ["libft4222.so"]
 else:
     libs = ["LibFT4222", "ftd2xx"]
@@ -34,6 +35,7 @@ else:
         libdir = "win/i386"
         ft4222_dll = "LibFT4222.dll"
     libdirs = [libdir]
+    rlibdirs = []
     libs_to_copy = [ft4222_dll, "ftd2xx.dll"]
 
 class myinstall(install):
@@ -47,7 +49,7 @@ extensions = [
         libraries=libs,
         include_dirs=incdirs,
         library_dirs=libdirs,
-        runtime_library_dirs=['./'],
+        runtime_library_dirs=rlibdirs,
     ),
 ]
 
