@@ -9,6 +9,7 @@ typedef unsigned short            USHORT;
 typedef unsigned short            SHORT;
 typedef unsigned char            UCHAR;
 typedef unsigned short            WORD;
+typedef unsigned short            WCHAR;
 typedef unsigned char            BYTE;
 typedef BYTE                    *LPBYTE;
 typedef unsigned int            BOOL;
@@ -32,13 +33,19 @@ typedef ULONG                    *PULONG;
 typedef LONG                    *LPLONG;
 typedef PVOID                    LPVOID;
 typedef void                    VOID;
+typedef USHORT                  *PUSHORT;
 typedef unsigned long long int    ULONGLONG;
 
 typedef struct _OVERLAPPED {
     DWORD Internal;
     DWORD InternalHigh;
-    DWORD Offset;
-    DWORD OffsetHigh;
+    union {
+        struct{
+            DWORD Offset;
+            DWORD OffsetHigh;
+        };
+        PVOID  Pointer;
+    };
     HANDLE hEvent;
 } OVERLAPPED, *LPOVERLAPPED;
 
@@ -61,13 +68,24 @@ typedef struct _EVENT_HANDLE
 
 typedef struct timeval SYSTEMTIME;
 typedef struct timeval FILETIME;
+
+// WaitForSingleObject return values.
+#define WAIT_ABANDONED      0x00000080L
+#define WAIT_OBJECT_0       0x00000000L
+#define WAIT_TIMEOUT        0x00000102L
+#define WAIT_FAILED         0xFFFFFFFF
+// Special value for WaitForSingleObject dwMilliseconds parameter
+#define INFINITE            0xFFFFFFFF  // Infinite timeout
+
 #ifndef TRUE
 #define TRUE    1
 #endif
 #ifndef FALSE
 #define FALSE    0
 #endif
-
+#ifndef CONST
+#define CONST const
+#endif
 //
 // Modem Status Flags
 //
