@@ -14,14 +14,8 @@ on the object thus returned.
 
 from __future__ import absolute_import
 from enum import IntEnum
-
-# change to directory of current file as libft4222 should be located there
-from os import path, getcwd, chdir
-current = getcwd()
-chdir(path.dirname(path.abspath(__file__)))
 from ft4222.ft4222 import *
 from ft4222 import *
-chdir(current)
 
 __all__ = [
     'createDeviceInfoList',

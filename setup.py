@@ -23,7 +23,7 @@ if os_name.startswith("linux"):
     else:
         libdir = "linux/build-pentium"
     libdirs = [libdir]
-    rlibdirs = ['./']
+    rlibdirs = ['$ORIGIN/.']
     libs_to_copy = ["libft4222.so"]
 else:
     libs = ["LibFT4222", "ftd2xx"]
