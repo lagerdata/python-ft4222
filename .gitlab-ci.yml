@@ -1,9 +1,33 @@
-image: alpine:3.11
+default:
+  image: python:3.7-alpine
+  before_script:
+    - apk --no-cache add build-base
+    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
+    - pip install cython
+
+.wheel:
+  script:
+    - python setup.py bdist_wheel
+  artifacts:
+    paths:
+      - dist/ft4222-*.whl
+
+wheel-3.6:
+  image: python:3.6-alpine
+  extends: .wheel
+
+wheel-3.7:
+  image: python:3.7-alpine
+  extends: .wheel
+
+wheel-3.8:
+  image: python:3.8-alpine
+  extends: .wheel
 
 pages:
   script:
-  - apk --no-cache add build-base python3 python3-dev cython py3-sphinx
-  - python3 setup.py build_ext install
+  - apk --no-cache add py3-sphinx
+  - python setup.py install
   - make -C doc html
   - mv doc/_build/html/ public/
   artifacts:
