@@ -7,9 +7,9 @@
 #
 
 from setuptools import setup
-from distutils.extension import Extension
-from distutils.command.install import install
-from Cython.Distutils import build_ext
+from setuptools.extension import Extension
+from setuptools.command.install import install
+from Cython.Build import cythonize
 from sys import platform as os_name
 import platform
 import shutil
@@ -42,6 +42,15 @@ class myinstall(install):
             shutil.copyfile(libdir + "/" + lib, "ft4222/"+ lib)
         install.run(self)
 
+extensions = [
+    Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
+        libraries=libs,
+        include_dirs=incdirs,
+        library_dirs=libdirs,
+        runtime_library_dirs=['./'],
+    ),
+]
+
 setup(
     name='ft4222',
     version='0.2',
@@ -64,15 +73,7 @@ setup(
     ],
     keywords='ftdi ft4222',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
-    ext_modules=[
-        Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
-                  libraries=libs,
-                  include_dirs=incdirs,
-                  library_dirs=libdirs,
-                  extra_compile_args=["-O3"],
-                  runtime_library_dirs=['./'],
-                 )
-    ],
-    cmdclass={'install': myinstall, 'build_ext': build_ext},
+    ext_modules=cythonize(extensions),
+    cmdclass={'install': myinstall},
     package_data={'ft4222': libs_to_copy},
 )
