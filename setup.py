@@ -21,7 +21,7 @@ if os_name.startswith("linux"):
     if is_64_bit:
         libdir = "linux/build-x86_64"
     else:
-        libdir = "linux/build-pentium"
+        libdir = "linux/build-i386"
     libdirs = [libdir]
     rlibdirs = ['$ORIGIN/.']
     libs_to_copy = ["libft4222.so"]
