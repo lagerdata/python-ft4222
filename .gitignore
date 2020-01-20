@@ -1,6 +1,6 @@
-*.c
-*.so
 *.pyc
+ft4222/*.c
+ft4222/*.so
 ft4222/*.dll
 build/
 __pycache__/
