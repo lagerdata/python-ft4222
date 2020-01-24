@@ -13,14 +13,16 @@ on the object thus returned.
 """
 
 from __future__ import absolute_import
-from enum import IntEnum
-from ft4222.ft4222 import *
-from ft4222 import *
+from .ft4222 import *
 
 __all__ = [
+    'FT2XXDeviceError',
+    'FT4222DeviceError',
+    'SysClock',
     'createDeviceInfoList',
     'getDeviceInfoDetail',
     'openBySerial',
     'openByDescription',
-    'openByLocation'
+    'openByLocation',
+    'FT4222',
 ]
