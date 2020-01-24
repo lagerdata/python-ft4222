@@ -5,10 +5,11 @@
 # MSR Electronics GmbH
 # SPDX-License-Identifier: MIT
 #
-#cython: language_level=2
+#cython: language_level=3
 
+from __future__ import absolute_import
 from libc.stdint cimport *
-from cftd2xx cimport *
+from .cftd2xx cimport *
 
 
 cdef extern from "libft4222.h":

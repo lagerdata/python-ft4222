@@ -5,14 +5,15 @@
 # MSR Electronics GmbH
 # SPDX-License-Identifier: MIT
 #
-#cython: language_level=2
+#cython: language_level=3
 
+from __future__ import absolute_import
 from ft4222.cftd2xx cimport *
 from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
-from GPIO import Dir, Trigger
 from enum import IntEnum
+from .GPIO import Dir, Trigger
 
 IF UNAME_SYSNAME == "Windows":
     cdef extern from "<malloc.h>" nogil:
