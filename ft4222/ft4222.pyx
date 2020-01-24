@@ -12,7 +12,7 @@ from ft4222.clibft4222 cimport *
 from cpython.array cimport array, resize
 from libc.stdio cimport printf
 from GPIO import Dir, Trigger
-from __init__ import SysClock
+from enum import IntEnum
 
 IF UNAME_SYSNAME == "Windows":
     cdef extern from "<malloc.h>" nogil:
@@ -70,6 +70,21 @@ class FT4222DeviceError(FT2XXDeviceError):
 
     def __str__(self):
         return self.message
+
+class SysClock(IntEnum):
+    """Chip system clock
+
+    Attributes:
+        CLK_60: 60 MHz
+        CLK_24: 24 MHz
+        CLK_48: 48 MHz
+        CLK_80: 80 MHz
+
+    """
+    CLK_60 = 0
+    CLK_24 = 1
+    CLK_48 = 2
+    CLK_80 = 3
 
 def createDeviceInfoList():
     """Create the internal device info list and return number of entries"""
