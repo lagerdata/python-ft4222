@@ -16,7 +16,7 @@ class Flag(IntEnum):
     Attributes:
         NONE: No start nor stopbit
         START: Startbit
-        REPEATED_START: Repeaded startbit (will not send master code in HS mode)
+        REPEATED_START: Repeated startbit (will not send master code in HS mode)
         STOP: Stopbit
         START_AND_STOP: Startbit and stopbit
 
