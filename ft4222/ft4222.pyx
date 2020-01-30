@@ -149,46 +149,47 @@ def openByLocation(locId):
 
 
 cdef class FT4222:
-    cdef FT_HANDLE handle
-    cdef DWORD chip_version
-    cdef DWORD dll_version
+    cdef FT_HANDLE _handle
+    cdef DWORD _chip_version
+    cdef DWORD _dll_version
 
     def __init__(self, handle, update=True):
-        self.handle = <FT_HANDLE><uintptr_t>handle
-        self.chip_version = 0
-        self.dll_version = 0
-        self.__get_version()
+        self._handle = <FT_HANDLE><uintptr_t>handle
+        self._chip_version = 0
+        self._dll_version = 0
+        self._get_version()
 
     def __del__(self):
-        if self.handle != NULL:
-            FT_Close(self.handle)
+        if self._handle != NULL:
+            FT4222_UnInitialize(self._handle)
+            FT_Close(self._handle)
 
     def close(self):
         """Closes the device."""
-        status = FT4222_UnInitialize(self.handle)
+        status = FT4222_UnInitialize(self._handle)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
-        status = FT_Close(self.handle)
+        status = FT_Close(self._handle)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
-        self.handle = NULL
+        self._handle = NULL
 
-    cdef __get_version(self):
+    cdef _get_version(self):
         cdef FT4222_Version ver
-        status = FT4222_GetVersion(self.handle, &ver)
+        status = FT4222_GetVersion(self._handle, &ver)
         if status == FT4222_OK:
-            self.chip_version = ver.chipVersion
-            self.dll_version = ver.dllVersion
+            self._chip_version = ver.chipVersion
+            self._dll_version = ver.dllVersion
 
     @property
     def chipVersion(self) -> int:
         """Chip version as number"""
-        return self.chip_version
+        return self._chip_version
 
     @property
     def libVersion(self) -> int:
         """Library version as number"""
-        return self.dll_version
+        return self._dll_version
 
     def chipRevision(self) -> str:
         """Get the revision of the chip in human readable format
@@ -198,12 +199,12 @@ cdef class FT4222:
 
         """
         try:
-            return __chip_rev_map[self.chip_version]
+            return __chip_rev_map[self._chip_version]
         except KeyError:
             return "Rev. unknown"
 
     def __repr__(self):
-        return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self.chip_version, self.chipRevision(), self.dll_version)
+        return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self._chip_version, self.chipRevision(), self._dll_version)
 
     def setClock(self, clk):
         """Set the system clock
@@ -215,7 +216,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SetClock(self.handle, clk)
+        status = FT4222_SetClock(self._handle, clk)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -230,7 +231,7 @@ cdef class FT4222:
 
         """
         cdef FT4222_ClockRate clk
-        status = FT4222_GetClock(self.handle, &clk)
+        status = FT4222_GetClock(self._handle, &clk)
         if status == FT4222_OK:
             return SysClock(clk)
         raise FT4222DeviceError, status
@@ -245,7 +246,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SetSuspendOut(self.handle, enable)
+        status = FT4222_SetSuspendOut(self._handle, enable)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -259,7 +260,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SetWakeUpInterrupt(self.handle, enable)
+        status = FT4222_SetWakeUpInterrupt(self._handle, enable)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -269,7 +270,7 @@ cdef class FT4222:
         cdef:
             array[uint8] buf = array('B', [])
         resize(buf, bytesToRead)
-        status = FT_VendorCmdGet(self.handle, req, buf.data.as_uchars, bytesToRead)
+        status = FT_VendorCmdGet(self._handle, req, buf.data.as_uchars, bytesToRead)
         if status == FT_OK:
             return bytes(buf)
         raise FT4222DeviceError, status
@@ -283,7 +284,7 @@ cdef class FT4222:
         cdef:
             uint16 bytesSent
             uint8* cdata = data
-        status = FT_VendorCmdSet(self.handle, req, cdata, len(data))
+        status = FT_VendorCmdSet(self._handle, req, cdata, len(data))
         if status != FT_OK:
             raise FT4222DeviceError, status
 
@@ -314,7 +315,7 @@ cdef class FT4222:
             ioDir[1] = gpio1
             ioDir[2] = gpio2
             ioDir[3] = gpio3
-        status = FT4222_GPIO_Init(self.handle, ioDir)
+        status = FT4222_GPIO_Init(self._handle, ioDir)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -333,7 +334,7 @@ cdef class FT4222:
         """
         cdef:
             BOOL value
-        status = FT4222_GPIO_Read(self.handle, portNum, &value)
+        status = FT4222_GPIO_Read(self._handle, portNum, &value)
         if status == FT4222_OK:
             return value
         raise FT4222DeviceError, status
@@ -349,7 +350,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_GPIO_Write(self.handle, portNum, value)
+        status = FT4222_GPIO_Write(self._handle, portNum, value)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -364,7 +365,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_GPIO_SetInputTrigger(self.handle, portNum, trigger)
+        status = FT4222_GPIO_SetInputTrigger(self._handle, portNum, trigger)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -383,7 +384,7 @@ cdef class FT4222:
         """
         cdef:
             uint16 queueSize
-        status = FT4222_GPIO_GetTriggerStatus(self.handle, portNum, &queueSize)
+        status = FT4222_GPIO_GetTriggerStatus(self._handle, portNum, &queueSize)
         if status == FT4222_OK:
             return queueSize
         raise FT4222DeviceError, status
@@ -407,7 +408,7 @@ cdef class FT4222:
         cdef:
             GPIO_Trigger *events = <GPIO_Trigger*>alloca(portNum * sizeof(GPIO_Trigger))
             uint16 sizeRead
-        status = FT4222_GPIO_ReadTriggerQueue(self.handle, portNum, events, readSize, &sizeRead)
+        status = FT4222_GPIO_ReadTriggerQueue(self._handle, portNum, events, readSize, &sizeRead)
         if status == FT4222_OK:
             res = []
             for i in xrange(readSize):
@@ -426,7 +427,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_I2CMaster_Init(self.handle, kbps)
+        status = FT4222_I2CMaster_Init(self._handle, kbps)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
         # current version (v1.3) of ftdi's lib can only handle clock rates down to 60kHz
@@ -463,7 +464,7 @@ cdef class FT4222:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
         resize(buf, bytesToRead)
-        status = FT4222_I2CMaster_Read(self.handle, addr, buf.data.as_uchars, bytesToRead, &bytesRead)
+        status = FT4222_I2CMaster_Read(self._handle, addr, buf.data.as_uchars, bytesToRead, &bytesRead)
         resize(buf, bytesRead)
         if status == FT4222_OK:
             return bytes(buf)
@@ -490,7 +491,7 @@ cdef class FT4222:
         cdef:
             uint16 bytesSent
             uint8* cdata = data
-        status = FT4222_I2CMaster_Write(self.handle, addr, cdata, len(data), &bytesSent)
+        status = FT4222_I2CMaster_Write(self._handle, addr, cdata, len(data), &bytesSent)
         if status == FT4222_OK:
             return bytesSent
         raise FT4222DeviceError, status
@@ -514,7 +515,7 @@ cdef class FT4222:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
         resize(buf, bytesToRead)
-        status = FT4222_I2CMaster_ReadEx(self.handle, addr, flag, buf.data.as_uchars, bytesToRead, &bytesRead)
+        status = FT4222_I2CMaster_ReadEx(self._handle, addr, flag, buf.data.as_uchars, bytesToRead, &bytesRead)
         resize(buf, bytesRead)
         if status == FT4222_OK:
             return bytes(buf)
@@ -542,7 +543,7 @@ cdef class FT4222:
         cdef:
             uint16 bytesSent
             uint8* cdata = data
-        status = FT4222_I2CMaster_WriteEx(self.handle, addr, flag, cdata, len(data), &bytesSent)
+        status = FT4222_I2CMaster_WriteEx(self._handle, addr, flag, cdata, len(data), &bytesSent)
         if status == FT4222_OK:
             return bytesSent
         raise FT4222DeviceError, status
@@ -557,7 +558,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_I2CMaster_Reset(self.handle)
+        status = FT4222_I2CMaster_Reset(self._handle)
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -574,7 +575,7 @@ cdef class FT4222:
 
         """
         cdef uint8 cs
-        status = FT4222_I2CMaster_GetStatus(self.handle, &cs)
+        status = FT4222_I2CMaster_GetStatus(self._handle, &cs)
         if status == FT4222_OK:
             return cs
         raise FT4222DeviceError, status
@@ -587,7 +588,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SPI_Reset(self.handle);
+        status = FT4222_SPI_Reset(self._handle);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -601,7 +602,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SPI_ResetTransaction(self.handle, spiIdx);
+        status = FT4222_SPI_ResetTransaction(self._handle, spiIdx);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -617,7 +618,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SPI_SetDrivingStrength(self.handle, clkStrength, ioStrength, ssoStrength);
+        status = FT4222_SPI_SetDrivingStrength(self._handle, clkStrength, ioStrength, ssoStrength);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -635,7 +636,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SPIMaster_Init(self.handle, mode, clock, cpol, cpha, ssoMap);
+        status = FT4222_SPIMaster_Init(self._handle, mode, clock, cpol, cpha, ssoMap);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -652,7 +653,7 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-        status = FT4222_SPIMaster_SetLines(self.handle, mode);
+        status = FT4222_SPIMaster_SetLines(self._handle, mode);
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
@@ -674,7 +675,7 @@ cdef class FT4222:
             array[uint8] buf = array('B', [])
             uint16 bytesRead
         resize(buf, bytesToRead)
-        status = FT4222_SPIMaster_SingleRead(self.handle, buf.data.as_uchars, bytesToRead, &bytesRead, isEndTransaction)
+        status = FT4222_SPIMaster_SingleRead(self._handle, buf.data.as_uchars, bytesToRead, &bytesRead, isEndTransaction)
         if status == FT4222_OK:
             resize(buf, bytesRead)
             return bytes(buf)
@@ -701,7 +702,7 @@ cdef class FT4222:
         cdef:
             uint16 bytesSent
             uint8* cdata = data
-        status = FT4222_SPIMaster_SingleWrite(self.handle, cdata, len(data), &bytesSent, isEndTransaction);
+        status = FT4222_SPIMaster_SingleWrite(self._handle, cdata, len(data), &bytesSent, isEndTransaction);
         if status == FT4222_OK:
             return bytesSent
         raise FT4222DeviceError, status
@@ -729,7 +730,7 @@ cdef class FT4222:
             uint8* cdata = data
             array[uint8] buf = array('B', [])
         resize(buf, len(data))
-        status = FT4222_SPIMaster_SingleReadWrite(self.handle, buf.data.as_uchars, cdata, len(data), &sizeTransferred, isEndTransaction);
+        status = FT4222_SPIMaster_SingleReadWrite(self._handle, buf.data.as_uchars, cdata, len(data), &sizeTransferred, isEndTransaction);
         if status == FT4222_OK:
             resize(buf, sizeTransferred)
             return bytes(buf)
@@ -764,7 +765,7 @@ cdef class FT4222:
             array[uint8] buf = array('B', [])
             uint32 bytesRead
         resize(buf, bytesToRead)
-        status = FT4222_SPIMaster_MultiReadWrite(self.handle, buf.data.as_uchars, cdata, len(singleWrite), len(multiWrite), bytesToRead, &bytesRead);
+        status = FT4222_SPIMaster_MultiReadWrite(self._handle, buf.data.as_uchars, cdata, len(singleWrite), len(multiWrite), bytesToRead, &bytesRead);
         if status == FT4222_OK:
             resize(buf, bytesRead)
             return bytes(buf)
@@ -779,7 +780,7 @@ cdef class FT4222:
         """
         cdef:
             DWORD bytesSent;
-        status = FT_Write(self.handle, <unsigned char*>NULL, 0, &bytesSent);
+        status = FT_Write(self._handle, <unsigned char*>NULL, 0, &bytesSent);
         if status == FT_OK:
             return
         raise FT4222DeviceError, status
