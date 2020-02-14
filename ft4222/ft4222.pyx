@@ -191,20 +191,16 @@ cdef class FT4222:
         """Library version as number"""
         return self._dll_version
 
+    @property
     def chipRevision(self) -> str:
-        """Get the revision of the chip in human readable format
-
-        Returns:
-            str: chip revision
-
-        """
+        """The revision of the chip in human readable format"""
         try:
             return __chip_rev_map[self._chip_version]
         except KeyError:
             return "Rev. unknown"
 
     def __repr__(self):
-        return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self._chip_version, self.chipRevision(), self._dll_version)
+        return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self._chip_version, self.chipRevision, self._dll_version)
 
     def setClock(self, clk):
         """Set the system clock
