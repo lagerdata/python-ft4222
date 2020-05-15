@@ -55,7 +55,7 @@ extensions = [
 
 setup(
     name='ft4222',
-    version='0.2',
+    version='0.3',
     author='Bearsh',
     author_email='me@bearsh.org',
     url='https://msrelectronics.gitlab.io/python-ft4222',
