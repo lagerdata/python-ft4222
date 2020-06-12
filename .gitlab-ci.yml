@@ -1,30 +1,100 @@
-default:
+stages:
+  - build
+  - deploy
+
+
+.wheel:
+  stage: build
+  tags:
+    - linux
   image: python:3.7-alpine
   before_script:
     - apk --no-cache add build-base
     - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
     - pip install cython
+  script:
+    - python setup.py bdist_wheel --plat-name manylinux1_x86_64
+  artifacts:
+    paths:
+      - dist/ft4222-*.whl
+      - dist/ft4222-*.tar.gz
 
-.wheel:
+wheel-3.6:
+  extends: .wheel
+  image: python:3.6-alpine
+
+wheel-3.7:
+  extends: .wheel
+  image: python:3.7-alpine
+
+wheel-3.8:
+  extends: .wheel
+  image: python:3.8-alpine
+
+wheel-src:
+  extends: .wheel
+  before_script:
+    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
+    - pip install cython
+  script:
+    - python setup.py sdist
+
+
+.wheel-win:
+  stage: build
+  tags:
+    - windows
   script:
     - python setup.py bdist_wheel
   artifacts:
     paths:
-      - dist/ft4222-*.whl
+      - dist\ft4222-*.whl
 
-wheel-3.6:
-  image: python:3.6-alpine
-  extends: .wheel
+.install_with_pip: &install_with_pip
+- python -m pip install cython
+- python -m pip install wheel
 
-wheel-3.7:
+wheel-win-3.6:
+  extends: .wheel-win
+  before_script:
+    - choco install python -y --version 3.6 --params "/InstallDir:C:\"
+    - $env:Path += ";C:\Python36;C:\Python36\Scripts"
+    - *install_with_pip
+
+wheel-win-3.7:
+  extends: .wheel-win
+  before_script:
+    - choco install python -y --version 3.7 --params "/InstallDir:C:\"
+    - $env:Path += ";C:\Python37;C:\Python37\Scripts"
+    - *install_with_pip
+
+wheel-win-3.8:
+  extends: .wheel-win
+  before_script:
+    - choco install python -y --version 3.8 --params "/InstallDir:C:\"
+    - $env:Path += ";C:\Python38;C:\Python38\Scripts"
+    - *install_with_pip
+
+
+pypi:
+  stage: deploy
   image: python:3.7-alpine
-  extends: .wheel
+  before_script:
+    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
+    - pip install twine
+  script:
+    - twine upload --repository testpypi dist/*
 
-wheel-3.8:
-  image: python:3.8-alpine
-  extends: .wheel
 
 pages:
+  stage: build
+  tags:
+    - linux
+  image: python:3.7-alpine
+  before_script:
+    - apk --no-cache add build-base
+    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
+    - pip install cython
   script:
   - pip install sphinx
   - python setup.py install
