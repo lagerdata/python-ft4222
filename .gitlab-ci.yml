@@ -54,12 +54,12 @@ wheel-src:
 - python -m pip install cython
 - python -m pip install wheel
 
-wheel-win-3.6:
-  extends: .wheel-win
-  before_script:
-    - choco install python -y --version 3.6 --params "/InstallDir:C:\"
-    - $env:Path += ";C:\Python36;C:\Python36\Scripts"
-    - *install_with_pip
+# wheel-win-3.6:
+#   extends: .wheel-win
+#   before_script:
+#     - choco install python -y --version 3.6 --params "/InstallDir:C:\"
+#     - $env:Path += ";C:\Python36;C:\Python36\Scripts"
+#     - *install_with_pip
 
 wheel-win-3.7:
   extends: .wheel-win
