@@ -53,6 +53,9 @@ extensions = [
     ),
 ]
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='ft4222',
     version='0.3',
@@ -60,6 +63,8 @@ setup(
     author_email='me@bearsh.org',
     url='https://msrelectronics.gitlab.io/python-ft4222',
     description='Python wrapper around libFT4222.',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -71,6 +76,9 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Communications',
     ],
     keywords='ftdi ft4222',
