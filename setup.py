@@ -8,7 +8,7 @@
 
 from setuptools import setup
 from setuptools.extension import Extension
-from setuptools.command.install import install
+from setuptools.command.build_py import build_py
 from Cython.Build import cythonize
 from sys import platform as os_name
 import platform
@@ -38,11 +38,17 @@ else:
     rlibdirs = []
     libs_to_copy = [ft4222_dll, "ftd2xx.dll"]
 
-class myinstall(install):
+class mybuild(build_py):
     def run(self):
-        for lib in libs_to_copy:
-            shutil.copyfile(libdir + "/" + lib, "ft4222/"+ lib)
-        install.run(self)
+        build_py.run(self)
+        print("running mybuild")
+        for package, src_dir, build_dir, filenames in self.data_files:
+            if package == 'ft4222':
+                for lib in libs_to_copy:
+                    print("copying {} -> {}".format(libdir + "/" + lib, "ft4222/"+ lib))
+                    shutil.copyfile(libdir + "/" + lib, build_dir + "/" + lib)
+                break
+
 
 extensions = [
     Extension("ft4222.ft4222", ["ft4222/ft4222.pyx"],
@@ -84,6 +90,5 @@ setup(
     keywords='ftdi ft4222',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
     ext_modules=cythonize(extensions),
-    cmdclass={'install': myinstall},
-    package_data={'ft4222': libs_to_copy},
+    cmdclass={'build_py': mybuild},
 )
