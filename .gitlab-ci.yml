@@ -7,10 +7,10 @@ stages:
   stage: build
   tags:
     - linux
-  image: python:3.7-alpine
+  image: python:3.7
   before_script:
-    - apk --no-cache add build-base
-    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
+    - apt update && apt install build-essential
+    - pip install -U setuptools wheel
     - pip install cython
   script:
     - python setup.py bdist_wheel --plat-name manylinux1_x86_64
@@ -21,15 +21,15 @@ stages:
 
 wheel-3.6:
   extends: .wheel
-  image: python:3.6-alpine
+  image: python:3.6
 
 wheel-3.7:
   extends: .wheel
-  image: python:3.7-alpine
+  image: python:3.7
 
 wheel-3.8:
   extends: .wheel
-  image: python:3.8-alpine
+  image: python:3.8
 
 wheel-src:
   extends: .wheel
@@ -51,6 +51,7 @@ wheel-src:
       - dist\ft4222-*.whl
 
 .install_with_pip: &install_with_pip
+- python -m pip install -U setuptools wheel
 - python -m pip install cython
 - python -m pip install wheel
 
