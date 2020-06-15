@@ -84,7 +84,7 @@ pypi:
     - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
     - pip install twine
   script:
-    - twine upload --repository testpypi dist/*
+    - twine upload dist/*
 
 
 pages:
