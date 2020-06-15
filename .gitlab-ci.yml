@@ -85,6 +85,8 @@ pypi:
     - pip install twine
   script:
     - twine upload dist/*
+  only:
+    - tags
 
 
 pages:
