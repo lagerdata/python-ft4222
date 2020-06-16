@@ -67,7 +67,7 @@ setup(
     version='1.0',
     author='Bearsh',
     author_email='me@bearsh.org',
-    url='https://msrelectronics.gitlab.io/python-ft4222',
+    url='https://gitlab.com/msrelectronics/python-ft4222',
     description='Python wrapper around libFT4222.',
     long_description=long_description,
     long_description_content_type="text/markdown",
