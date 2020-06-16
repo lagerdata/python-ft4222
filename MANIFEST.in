@@ -1,2 +1,4 @@
 recursive-include linux *
 recursive-include win *
+include ft4222/*.pyx
+include ft4222/*.pxd
