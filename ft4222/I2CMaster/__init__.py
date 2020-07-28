@@ -37,7 +37,7 @@ class ControllerStatus(IntEnum):
         DATA_NACK: data not acknowledged during last operation
         ARB_LOST: arbitration lost during last operation
         IDLE: controller idle
-        BUSY: bus busy
+        BUS_BUSY: bus busy
 
     """
     BUSY = 0x01

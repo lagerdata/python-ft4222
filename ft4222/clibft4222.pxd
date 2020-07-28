@@ -137,6 +137,12 @@ cdef extern from "libft4222.h":
         DS_12MA = 2
         DS_16MA = 3
 
+    ctypedef enum SPI_SlaveProtocol:
+        SPI_SLAVE_WITH_PROTOCOL = 0
+        SPI_SLAVE_NO_PROTOCOL   = 1    
+        SPI_SLAVE_NO_ACK        = 2
+
+
     FT4222_STATUS FT4222_UnInitialize(FT_HANDLE ftHandle)
     FT4222_STATUS FT4222_SetClock(FT_HANDLE ftHandle, FT4222_ClockRate clk)
     FT4222_STATUS FT4222_GetClock(FT_HANDLE ftHandle, FT4222_ClockRate* clk)
@@ -171,5 +177,14 @@ cdef extern from "libft4222.h":
     FT4222_STATUS FT4222_SPIMaster_SingleWrite(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
     FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
     FT4222_STATUS FT4222_SPIMaster_MultiReadWrite(FT_HANDLE ftHandle, uint8* readBuffer, uint8* writeBuffer, uint8 singleWriteBytes, uint16 multiWriteBytes, uint16 multiReadBytes, uint32* sizeOfRead);
+    # FT4222 SPI Slave
+    FT4222_STATUS FT4222_SPISlave_Init(FT_HANDLE ftHandle);
+    FT4222_STATUS FT4222_SPISlave_InitEx(FT_HANDLE ftHandle, SPI_SlaveProtocol protocolOpt);
+    FT4222_STATUS FT4222_SPISlave_SetMode(FT_HANDLE ftHandle, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha);
+    FT4222_STATUS FT4222_SPISlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
+    FT4222_STATUS FT4222_SPISlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead);
+    FT4222_STATUS FT4222_SPISlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
+    FT4222_STATUS FT4222_SPISlave_RxQuickResponse(FT_HANDLE ftHandle, BOOL enable);
+
 
 
