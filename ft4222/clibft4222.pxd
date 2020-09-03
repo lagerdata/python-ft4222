@@ -139,7 +139,7 @@ cdef extern from "libft4222.h":
 
     ctypedef enum SPI_SlaveProtocol:
         SPI_SLAVE_WITH_PROTOCOL = 0
-        SPI_SLAVE_NO_PROTOCOL   = 1    
+        SPI_SLAVE_NO_PROTOCOL   = 1
         SPI_SLAVE_NO_ACK        = 2
 
 
@@ -185,6 +185,3 @@ cdef extern from "libft4222.h":
     FT4222_STATUS FT4222_SPISlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead);
     FT4222_STATUS FT4222_SPISlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
     FT4222_STATUS FT4222_SPISlave_RxQuickResponse(FT_HANDLE ftHandle, BOOL enable);
-
-
-

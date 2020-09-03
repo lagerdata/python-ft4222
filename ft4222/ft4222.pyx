@@ -823,7 +823,6 @@ cdef class FT4222:
             raise FT4222DeviceError, status
 
     def spiSlave_Read(self, bytesToRead):
-        
         """Read data from the receive queue of the SPI slave device.
 
         Args:
@@ -836,7 +835,6 @@ cdef class FT4222:
             FT4222DeviceError: on error
 
         """
-
         cdef:
             array[uint8] buf = array('B', [])
             uint16 sizeRead
@@ -849,7 +847,7 @@ cdef class FT4222:
         raise FT4222DeviceError, status
 
     def spiSlave_SetMode(self, cpol, cpha):
-        """Set SPI slave cpol and cpha. The Default value of cpol is (:obj:`ft4222.SPI.Cpol.CLK_IDLE_LOW`) , default value of cpha is (:obj:`ft4222.SPI.Cpol.CLK_LEADING`) 
+        """Set SPI slave cpol and cpha. The Default value of cpol is (:obj:`ft4222.SPI.Cpol.CLK_IDLE_LOW`) , default value of cpha is (:obj:`ft4222.SPI.Cpol.CLK_LEADING`)
 
         Args:
             cpol (:obj:`ft4222.SPI.Cpol`): Clock polarity
@@ -861,8 +859,8 @@ cdef class FT4222:
         """
         status = FT4222_SPISlave_SetMode(self._handle, cpol, cpha);
         if status != FT4222_OK:
-            raise FT4222DeviceError, status        
-    
+            raise FT4222DeviceError, status
+
     def spiSlave_GetRxStatus(self):
         """Get number of bytes in the receive queue.
 
@@ -881,11 +879,10 @@ cdef class FT4222:
         if status == FT4222_OK:
             return pRxSize
         raise FT4222DeviceError, status
-    
+
     def spiSlave_Write(self, data):
-        
         """Write data to the transmit queue of the SPI slave device.
-   
+
         Args:
             data (bytes, bytearray, int): Data to write to slave
 
@@ -909,7 +906,7 @@ cdef class FT4222:
             return sizeTransferred
         raise FT4222DeviceError, status
 
-    
+
     def spiSlave_RxQuickResponse(self, enable):
         """Adjust SPI Slave RX response method. By default, RX quick-response function is off
 

@@ -18,6 +18,5 @@ class Protocol(IntEnum):
 
     """
     SPI_SLAVE_WITH_PROTOCOL = 0
-    SPI_SLAVE_NO_PROTOCOL   = 1    
+    SPI_SLAVE_NO_PROTOCOL   = 1
     SPI_SLAVE_NO_ACK        = 2
-
