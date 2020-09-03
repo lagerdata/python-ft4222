@@ -640,8 +640,8 @@ cdef class FT4222:
         Args:
             mode (:obj:`ft4222.SPIMaster.Mode`): SPI transmission lines / mode
             clock (:obj:`ft4222.SPIMaster.Clock`): Clock divider
-            cpol (:obj:`ft4222.SPIMaster.Cpol`): Clock polarity
-            cpha (:obj:`ft4222.SPIMaster.Cpha`): Clock phase
+            cpol (:obj:`ft4222.SPI.Cpol`): Clock polarity
+            cpha (:obj:`ft4222.SPI.Cpha`): Clock phase
             ssoMap (:obj:`ft4222.SPIMaster.SlaveSelect`): Slave selection output pins
 
         Raises:
@@ -754,7 +754,7 @@ cdef class FT4222:
         Args:
             singleWrite (bytes, bytearray, int): Data to write to slave in signle-line mode (max. 15 bytes)
             multiWrite (bytes, bytearray, int): Data to write to slave in multi-line mode (max. 65535 bytes)
-            bytesToRead (int):  Number of bytes to read on multi-line (max. 65535 bytes.
+            bytesToRead (int):  Number of bytes to read on multi-line (max. 65535 bytes)
 
         Returns:
             bytes: Bytes read from slave in multi-line mode
@@ -796,3 +796,130 @@ cdef class FT4222:
         if status == FT_OK:
             return
         raise FT4222DeviceError, status
+
+    def spiSlave_Init(self):
+        """Initialize the FT4222H as an SPI slave. Default SPI_SlaveProtocol is SPI_SLAVE_WITH_PROTOCOL.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SPISlave_Init(self._handle);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spiSlave_InitEx(self, mode):
+        """Initialize as an SPI slave under all modes.
+
+        Args:
+            mode (:obj:`ft4222.SPIMaster.Mode`): SPI transmission lines / mode
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SPISlave_InitEx(self._handle,mode);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def spiSlave_Read(self, bytesToRead):
+        
+        """Read data from the receive queue of the SPI slave device.
+
+        Args:
+            bytesToRead (int): Number of bytes to read
+
+        Returns:
+            bytes: Bytes read from slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+
+        cdef:
+            array[uint8] buf = array('B', [])
+            uint16 sizeRead
+        resize(buf, bytesToRead)
+
+        status = FT4222_SPISlave_Read(self._handle, buf.data.as_uchars, bytesToRead, &sizeRead);
+        if status == FT4222_OK:
+            resize(buf, sizeRead)
+            return bytes(buf)
+        raise FT4222DeviceError, status
+
+    def spiSlave_SetMode(self, cpol, cpha):
+        """Set SPI slave cpol and cpha. The Default value of cpol is (:obj:`ft4222.SPI.Cpol.CLK_IDLE_LOW`) , default value of cpha is (:obj:`ft4222.SPI.Cpol.CLK_LEADING`) 
+
+        Args:
+            cpol (:obj:`ft4222.SPI.Cpol`): Clock polarity
+            cpha (:obj:`ft4222.SPI.Cpha`): Clock phase
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SPISlave_SetMode(self._handle, cpol, cpha);
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status        
+    
+    def spiSlave_GetRxStatus(self):
+        """Get number of bytes in the receive queue.
+
+        Returns:
+            pRxSize (uint16): Number of bytes in the receive queue
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef:
+            uint16 pRxSize
+
+        status = FT4222_SPISlave_GetRxStatus(self._handle, &pRxSize);
+
+        if status == FT4222_OK:
+            return pRxSize
+        raise FT4222DeviceError, status
+    
+    def spiSlave_Write(self, data):
+        
+        """Write data to the transmit queue of the SPI slave device.
+   
+        Args:
+            data (bytes, bytearray, int): Data to write to slave
+
+        Returns:
+            sizeTransferred (uint16): Number of bytes written to the device.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        if isinstance(data, int):
+            data = bytes([data])
+        elif not isinstance(data, (bytes, bytearray)):
+            raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
+        cdef:
+            uint16 sizeTransferred
+            uint8* cdata = data
+
+        status = FT4222_SPISlave_Write(self._handle, cdata, len(data), &sizeTransferred);
+        if status == FT4222_OK:
+            return sizeTransferred
+        raise FT4222DeviceError, status
+
+    
+    def spiSlave_RxQuickResponse(self, enable):
+        """Adjust SPI Slave RX response method. By default, RX quick-response function is off
+
+        Args:
+            enable (bool): TRUE to enable Rule3 to speed up the response time of RX data. FALSE to disable Rule3.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_SPISlave_RxQuickResponse(self._handle, enable)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status

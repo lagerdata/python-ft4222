@@ -50,27 +50,7 @@ class Clock(IntEnum):
     DIV_256 = 8
     DIV_512 = 9
 
-class Cpol(IntEnum):
-    """SPIMaster Polarisation
 
-    Attributes:
-        IDLE_LOW: Idle low
-        IDLE_HIGH: Idle high
-
-    """
-    IDLE_LOW  = 0
-    IDLE_HIGH = 1
-
-class Cpha(IntEnum):
-    """SPIMaster Phase
-
-    Attributes:
-        CLK_LEADING: Leading phase
-        CLK_TRAILING: Trailing phase
-
-    """
-    CLK_LEADING  = 0
-    CLK_TRAILING = 1
 
 class SlaveSelect(IntEnum):
     """Slave Slave bitmap
