@@ -11,29 +11,42 @@ from setuptools.extension import Extension
 from setuptools.command.build_py import build_py
 from Cython.Build import cythonize
 from sys import platform as os_name
-import platform
+from platform import system, machine, architecture
 import shutil
 
-is_64_bit = platform.architecture()[0] == '64bit'
-if os_name.startswith("linux"):
+
+if system() ==  "Linux":
+    if machine() == 'x86_64':
+        libdir = "linux/build-x86_64"
+    elif machine() == 'i386':
+        libdir = "linux/build-i386"
+    elif machine() == 'armv7l':
+        libdir = "linux/build-arm-v7"
+    elif machine().startswith("arm"):
+        if architecture()[0] == '64bit':
+            libdir = "linux/build-arm-v8"
+        else:
+            libdir = "linux/build-arm-v6-hf"
+    elif machine() == 'aarch64':
+        libdir = "linux/build-arm-v8"
+    else:
+        raise Exception("Unsupported machine and or architecture")
+
     libs = ["ft4222"]
     incdirs = ["linux"]
-    if is_64_bit:
-        libdir = "linux/build-x86_64"
-    else:
-        libdir = "linux/build-i386"
     libdirs = [libdir]
     rlibdirs = ['$ORIGIN/.']
     libs_to_copy = ["libft4222.so"]
 else:
-    libs = ["LibFT4222", "ftd2xx"]
-    incdirs = ["win"]
-    if is_64_bit:
+    if architecture()[0] == '64bit':
         libdir = "win/amd64"
         ft4222_dll = "LibFT4222-64.dll"
     else:
         libdir = "win/i386"
         ft4222_dll = "LibFT4222.dll"
+
+    libs = ["LibFT4222", "ftd2xx"]
+    incdirs = ["win"]
     libdirs = [libdir]
     rlibdirs = []
     libs_to_copy = [ft4222_dll, "ftd2xx.dll"]
@@ -64,7 +77,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='ft4222',
-    version='1.1.0.dev1',
+    version='1.1.0.dev2',
     author='Bearsh',
     author_email='me@bearsh.org',
     url='https://gitlab.com/msrelectronics/python-ft4222',
