@@ -100,7 +100,7 @@ setup(
         'Topic :: Communications',
     ],
     keywords='ftdi ft4222',
-    packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster'],
+    packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster', 'ft4222.SPISlave'],
     ext_modules=cythonize(extensions),
     cmdclass={'build_py': mybuild},
 )
