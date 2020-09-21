@@ -31,3 +31,14 @@ data += dev.i2cMaster_ReadEx(slave, ft4222.I2CMaster.Flag.NONE, 5)
 # another byte, than stop
 data += dev.i2cMaster_ReadEx(slave, ft4222.I2CMaster.Flag.STOP, 1)
 ```
+
+## Accessrights
+
+Under Linux, the usb device is normally not accessibly by a normal user, therefor
+a udev rule is required. Create or extend ``/etc/udev/rules.d/99-ftdi.rules`` to
+contain the following text:
+
+```bash
+# FTDI's ft4222 USB-I2C Adapter
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="601c", GROUP="plugdev", MODE="0666"
+```
