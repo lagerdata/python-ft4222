@@ -7,36 +7,6 @@
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-API
-===
-
-.. automodule:: ft4222
-    :members:
-
-.. autoclass:: FT4222
-    :members:
-
-.. automodule:: ft4222.I2CMaster
-    :members:
-
-.. automodule:: ft4222.GPIO
-    :members:
-
-.. automodule:: ft4222.SPI
-    :members:
-
-.. automodule:: ft4222.SPIMaster
-    :members:
-
-.. automodule:: ft4222.SPISlave
-    :members:
+   api

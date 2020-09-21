@@ -99,7 +99,7 @@ pages:
     - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
     - pip install cython
   script:
-  - pip install sphinx m2r2
+  - pip install sphinx m2r2 sphinx-rtd-theme
   - python setup.py install
   - make -C doc html
   - mv doc/_build/html/ public/
