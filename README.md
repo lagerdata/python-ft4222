@@ -9,6 +9,8 @@ The complete documentation can be found [here](https://msrelectronics.gitlab.io/
 
 ## Example
 
+### I2C Master
+
 ```python
 import ft4222
 import ft4222.I2CMaster
@@ -30,6 +32,31 @@ data = dev.i2cMaster_ReadEx(slave, ft4222.I2CMaster.Flag.REPEATED_START, 1)[0]
 data += dev.i2cMaster_ReadEx(slave, ft4222.I2CMaster.Flag.NONE, 5)
 # another byte, than stop
 data += dev.i2cMaster_ReadEx(slave, ft4222.I2CMaster.Flag.STOP, 1)
+```
+
+### GPIO
+
+```python
+import time
+import ft4222
+from ft4222.GPIO import Dir, Port, Output
+
+# open device with default description 'FT4222 A'
+dev = ft4222.openByDescription('FT4222 A')
+
+# use GPIO2 as gpio (not suspend out)
+dev.setSuspendOut(False)
+# use GPIO3 as gpio (not wakeup)
+dev.setWakeUpInterrut(False)
+
+# init GPIO2 as output
+dev.gpio_Init(gpio2 = Dir.OUTPUT)
+
+# generate a square wave signal with GPIO2
+while True:
+    dev.gpio_Write(Port.P2, output)
+    output = not output
+    time.sleep(0.1)
 ```
 
 ## Accessrights
