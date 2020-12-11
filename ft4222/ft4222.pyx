@@ -905,18 +905,3 @@ cdef class FT4222:
         if status == FT4222_OK:
             return sizeTransferred
         raise FT4222DeviceError, status
-
-
-    def spiSlave_RxQuickResponse(self, enable):
-        """Adjust SPI Slave RX response method. By default, RX quick-response function is off
-
-        Args:
-            enable (bool): TRUE to enable Rule3 to speed up the response time of RX data. FALSE to disable Rule3.
-
-        Raises:
-            FT4222DeviceError: on error
-
-        """
-        status = FT4222_SPISlave_RxQuickResponse(self._handle, enable)
-        if status != FT4222_OK:
-            raise FT4222DeviceError, status
