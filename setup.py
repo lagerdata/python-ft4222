@@ -21,7 +21,7 @@ if system() ==  "Linux":
     elif machine() == 'i386':
         libdir = "linux/build-i386"
     elif machine() == 'armv7l':
-        libdir = "linux/build-arm-v7"
+        libdir = "linux/build-arm-v7-hf"
     elif machine().startswith("arm"):
         if architecture()[0] == '64bit':
             libdir = "linux/build-arm-v8"
