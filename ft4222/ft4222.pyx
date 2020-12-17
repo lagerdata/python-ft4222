@@ -180,6 +180,12 @@ cdef class FT4222:
             FT4222_UnInitialize(self._handle)
             FT_Close(self._handle)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+
     def close(self):
         """Closes the device."""
         status = FT4222_UnInitialize(self._handle)
