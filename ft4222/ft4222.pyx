@@ -598,6 +598,149 @@ cdef class FT4222:
             return cs
         raise FT4222DeviceError, status
 
+    def i2cSlave_Init(self):
+        """Initialize the FT4222H as an I2C slave.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_I2CSlave_Init(self._handle)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def i2cSlave_Reset(self):
+        """Reset i2c slave
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_I2CSlave_Reset(self._handle)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def i2cSlave_GetAddress(self):
+        """Get address of slave device
+
+        Returns:
+            int: address of slave device
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef uint8 addr
+        status = FT4222_I2CSlave_GetAddress(self._handle, &addr)
+        if status == FT4222_OK:
+            return addr
+        raise FT4222DeviceError, status
+
+    def i2cSlave_SetAddress(self, addr):
+        """Set address of slave device
+
+        Args:
+            addr(int): address of slave device
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_I2CSlave_SetAddress(self._handle, addr)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def i2cSlave_GetRxStatus(self):
+        """Get rx byte count of slave device
+
+        Returns:
+            int: rx byte count of slave device
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef uint16 rxSize
+        status = FT4222_I2CSlave_GetRxStatus(self._handle, &rxSize)
+        if status == FT4222_OK:
+            return rxSize
+        raise FT4222DeviceError, status
+
+    def i2cSlave_Read(self, bytesToRead):
+        """Read bytes from master device
+
+        Args:
+            bytesToRead (int): Number of bytes to read from master
+
+        Returns:
+            bytes: Bytes read from master
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        cdef:
+            array[uint8] buf = array('B', [])
+            uint16 bytesRead
+        resize(buf, bytesToRead)
+        status = FT4222_I2CSlave_Read(self._handle, buf.data.as_uchars, bytesToRead, &bytesRead)
+        resize(buf, bytesRead)
+        if status == FT4222_OK:
+            return bytes(buf)
+        raise FT4222DeviceError, status
+
+    def i2cSlave_Write(self, data):
+        """write data to master
+
+        Args:
+            data (int, bytes, bytearray): Data to write to master
+
+        Returns:
+            int: Bytes sent to master
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        if isinstance(data, int):
+            data = bytes([data])
+        elif not isinstance(data, (bytes, bytearray)):
+            raise TypeError("the data argument must be of type 'int', 'bytes' or 'bytearray'")
+        cdef:
+            uint16 bytesSent
+            uint8* cdata = data
+        status = FT4222_I2CSlave_Write(self._handle, cdata, len(data), &bytesSent)
+        if status == FT4222_OK:
+            return bytesSent
+        raise FT4222DeviceError, status
+
+    def i2cSlave_SetClockStretch(self, enable):
+        """Set clock stretch
+
+        Args:
+            enable (bool): True for enable, False for disable
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_I2CSlave_SetClockStretch(self._handle, enable)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
+
+    def i2cSlave_SetRespWord(self, responseWord):
+        """Set response word
+
+        Args:
+            enable (bool): True for enable, False for disable
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT4222_I2CSlave_SetRespWord(self._handle, responseWord)
+        if status != FT4222_OK:
+            raise FT4222DeviceError, status
 
     def spi_Reset(self):
         """Reset the SPI master or slave device
