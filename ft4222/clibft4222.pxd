@@ -152,7 +152,7 @@ cdef extern from "libft4222.h":
     FT4222_STATUS FT4222_GetMaxTransferSize(FT_HANDLE ftHandle, uint16* pMaxSize)
     FT4222_STATUS FT4222_SetEventNotification(FT_HANDLE ftHandle, DWORD mask, PVOID param)
     FT4222_STATUS FT4222_GetVersion(FT_HANDLE ftHandle, FT4222_Version* pVersion)
-    # FT4222 I2C Functions
+    # FT4222 I2C Master Functions
     FT4222_STATUS FT4222_I2CMaster_Read(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred)
     FT4222_STATUS FT4222_I2CMaster_Write(FT_HANDLE ftHandle, uint16 deviceAddress, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred)
     FT4222_STATUS FT4222_I2CMaster_Init(FT_HANDLE ftHandle, uint32 kbps)
@@ -160,6 +160,16 @@ cdef extern from "libft4222.h":
     FT4222_STATUS FT4222_I2CMaster_WriteEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred)
     FT4222_STATUS FT4222_I2CMaster_Reset(FT_HANDLE ftHandle)
     FT4222_STATUS FT4222_I2CMaster_GetStatus(FT_HANDLE ftHandle, uint8 *controllerStatus)
+    # FT4222 I2C Slave Functions
+    FT4222_STATUS FT4222_I2CSlave_Init(FT_HANDLE ftHandle);
+    FT4222_STATUS FT4222_I2CSlave_Reset(FT_HANDLE ftHandle);
+    FT4222_STATUS FT4222_I2CSlave_GetAddress(FT_HANDLE ftHandle, uint8*addr);
+    FT4222_STATUS FT4222_I2CSlave_SetAddress(FT_HANDLE ftHandle, uint8 addr);
+    FT4222_STATUS FT4222_I2CSlave_GetRxStatus(FT_HANDLE ftHandle, uint16*pRxSize);
+    FT4222_STATUS FT4222_I2CSlave_Read(FT_HANDLE ftHandle, uint8*buffer, uint16 bufferSize, uint16*sizeTransferred);
+    FT4222_STATUS FT4222_I2CSlave_Write(FT_HANDLE ftHandle, uint8*buffer, uint16 bufferSize, uint16*sizeTransferred);
+    FT4222_STATUS FT4222_I2CSlave_SetClockStretch(FT_HANDLE ftHandle, BOOL enable);
+    FT4222_STATUS FT4222_I2CSlave_SetRespWord(FT_HANDLE ftHandle, uint8 responseWord);
     # FT4222 GPIO Functions
     FT4222_STATUS FT4222_GPIO_Init(FT_HANDLE ftHandle, GPIO_Dir gpioDir[4])
     FT4222_STATUS FT4222_GPIO_Read(FT_HANDLE ftHandle, GPIO_Port portNum, BOOL* value)
