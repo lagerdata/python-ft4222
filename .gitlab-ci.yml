@@ -31,6 +31,10 @@ wheel-3.8:
   extends: .wheel
   image: python:3.8
 
+wheel-3.9:
+  extends: .wheel
+  image: python:3.9
+
 wheel-src:
   extends: .wheel
   before_script:
@@ -55,13 +59,6 @@ wheel-src:
 - python -m pip install cython
 - python -m pip install wheel
 
-# wheel-win-3.6:
-#   extends: .wheel-win
-#   before_script:
-#     - choco install python -y --version 3.6 --params "/InstallDir:C:\"
-#     - $env:Path += ";C:\Python36;C:\Python36\Scripts"
-#     - *install_with_pip
-
 wheel-win-3.7:
   extends: .wheel-win
   before_script:
@@ -76,6 +73,12 @@ wheel-win-3.8:
     - $env:Path += ";C:\Python38;C:\Python38\Scripts"
     - *install_with_pip
 
+wheel-win-3.9:
+  extends: .wheel-win
+  before_script:
+    - choco install python -y --version 3.9 --params "/InstallDir:C:\"
+    - $env:Path += ";C:\Python39;C:\Python39\Scripts"
+    - *install_with_pip
 
 pypi:
   stage: deploy
