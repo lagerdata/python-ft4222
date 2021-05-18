@@ -6,6 +6,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""SPI Slave
+
+Definitions to configure the SPI Slave interface.
+"""
+
 from enum import IntEnum
 
 class Protocol(IntEnum):

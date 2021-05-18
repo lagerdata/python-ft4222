@@ -6,6 +6,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""GPIO
+
+Definitions to configure the GPIO interface.
+"""
+
 from enum import IntEnum
 
 class Trigger(IntEnum):

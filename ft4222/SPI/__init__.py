@@ -6,6 +6,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""SPI
+
+Definitions to configure either the SPI Master or Slave interface.
+"""
+
 from enum import IntEnum
 
 class DrivingStrength(IntEnum):

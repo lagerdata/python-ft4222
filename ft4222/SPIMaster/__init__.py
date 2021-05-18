@@ -6,6 +6,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""SPI Master
+
+Definitions to configure the SPI Master interface.
+"""
+
 from enum import IntEnum
 
 class Mode(IntEnum):

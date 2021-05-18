@@ -6,6 +6,11 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""I2C Master
+
+Definitions to configure the I2C Master interface.
+"""
+
 from enum import IntEnum
 
 class Flag(IntEnum):
