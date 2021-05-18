@@ -82,9 +82,8 @@ wheel-win-3.9:
 
 pypi:
   stage: deploy
-  image: python:3.7-alpine
+  image: python:3.7-slim
   before_script:
-    - echo "manylinux1_compatible = True" > $(dirname /usr/local/lib/python3.*/.)/site-packages/_manylinux.py
     - pip install twine
   script:
     - twine upload dist/*
