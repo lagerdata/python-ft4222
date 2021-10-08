@@ -40,16 +40,16 @@ if system() ==  "Linux":
 else:
     if architecture()[0] == '64bit':
         libdir = "win/amd64"
-        ft4222_dll = "LibFT4222-64.dll"
+        libs = ["LibFT4222-64", "ftd2xx"]
+        libs_to_copy = ["LibFT4222-64.dll", "ftd2xx.dll"]
     else:
         libdir = "win/i386"
-        ft4222_dll = "LibFT4222.dll"
+        libs = ["LibFT4222", "ftd2xx"]
+        libs_to_copy = ["LibFT4222.dll", "ftd2xx.dll"]
 
-    libs = ["LibFT4222", "ftd2xx"]
     incdirs = ["win"]
     libdirs = [libdir]
     rlibdirs = []
-    libs_to_copy = [ft4222_dll, "ftd2xx.dll"]
 
 class mybuild(build_py):
     def run(self):

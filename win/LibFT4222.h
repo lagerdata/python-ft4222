@@ -14,6 +14,9 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ * FTDI DRIVERS MAY BE USED ONLY IN CONJUNCTION WITH PRODUCTS BASED ON FTDI PARTS.
+ *
+ * FTDI DRIVERS MAY BE DISTRIBUTED IN ANY FORM AS LONG AS LICENSE INFORMATION IS NOT MODIFIED.
  *
  * @file LibFT4222.h
  *
@@ -24,9 +27,13 @@
  * Revision History:
  * 1.0 - initial version
  * 1.2 - allow use on non-Windows platforms;
- *       add I2CMaster ReadEx/WriteEx/GetStatus
- * 1.3   add FT4222_I2CSlave_SetClockStretch
- *           FT4222_I2CSlave_SetRespWord
+ *         add I2CMaster ReadEx/WriteEx/GetStatus
+ * 1.3 - add FT4222_I2CSlave_SetClockStretch
+ *         add FT4222_I2CSlave_SetRespWord
+ * 1.4 - add FT4222_I2CMaster_ResetBus
+ *         add FT4222_SPIMaster_SetCS
+ *         remove FT4222_SPISlave_RxQuickResponse 
+ *         add static library, need to define FT4222_STATIC
  */
  
 #ifdef _WIN32
@@ -44,7 +51,9 @@
 
     #ifdef LIBFT4222_EXPORTS
         #define LIBFT4222_API __declspec(dllexport)
-    #else
+	#elif defined(FT4222_STATIC)
+	    #define LIBFT4222_API  
+	#else
         #define LIBFT4222_API __declspec(dllimport)
     #endif
 
@@ -224,6 +233,16 @@ typedef enum SPI_DrivingStrength
 }
 SPI_DrivingStrength;
 
+
+typedef enum SPI_ChipSelect
+{
+	CS_ACTIVE_NEGTIVE  = 0,
+	CS_ACTIVE_POSTIVE,
+}
+SPI_ChipSelect;
+
+
+
 typedef enum GPIO_Port
 {
     GPIO_PORT0  =0,
@@ -321,6 +340,7 @@ LIBFT4222_API FT4222_STATUS FT4222_ChipReset(FT_HANDLE ftHandle);
 
 // FT4222 SPI Functions
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_Init(FT_HANDLE ftHandle, FT4222_SPIMode  ioLine, FT4222_SPIClock clock, FT4222_SPICPOL  cpol, FT4222_SPICPHA  cpha, uint8 ssoMap);
+LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetCS(FT_HANDLE ftHandle, SPI_ChipSelect cs);
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SetLines(FT_HANDLE ftHandle, FT4222_SPIMode spiMode);
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleRead(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead, BOOL isEndTransaction);
 LIBFT4222_API FT4222_STATUS FT4222_SPIMaster_SingleWrite(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred, BOOL isEndTransaction);
@@ -333,7 +353,6 @@ LIBFT4222_API FT4222_STATUS FT4222_SPISlave_SetMode(FT_HANDLE ftHandle, FT4222_S
 LIBFT4222_API FT4222_STATUS FT4222_SPISlave_GetRxStatus(FT_HANDLE ftHandle, uint16* pRxSize);
 LIBFT4222_API FT4222_STATUS FT4222_SPISlave_Read(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeOfRead);
 LIBFT4222_API FT4222_STATUS FT4222_SPISlave_Write(FT_HANDLE ftHandle, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
-LIBFT4222_API FT4222_STATUS FT4222_SPISlave_RxQuickResponse(FT_HANDLE ftHandle, BOOL enable);
 
 LIBFT4222_API FT4222_STATUS FT4222_SPI_Reset(FT_HANDLE ftHandle);
 LIBFT4222_API FT4222_STATUS FT4222_SPI_ResetTransaction(FT_HANDLE ftHandle, uint8 spiIdx);
@@ -349,6 +368,7 @@ LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_ReadEx(FT_HANDLE ftHandle, uint16 d
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_WriteEx(FT_HANDLE ftHandle, uint16 deviceAddress, uint8 flag, uint8* buffer, uint16 bufferSize, uint16* sizeTransferred);
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_Reset(FT_HANDLE ftHandle);
 LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_GetStatus(FT_HANDLE ftHandle, uint8 *controllerStatus);
+LIBFT4222_API FT4222_STATUS FT4222_I2CMaster_ResetBus(FT_HANDLE ftHandle);
 
 
 LIBFT4222_API FT4222_STATUS FT4222_I2CSlave_Init(FT_HANDLE ftHandle);
