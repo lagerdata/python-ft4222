@@ -37,6 +37,15 @@ if system() ==  "Linux":
     libdirs = [libdir]
     rlibdirs = ['$ORIGIN/.']
     libs_to_copy = ["libft4222.so"]
+elif system() == "Darwin":
+    libdir = "./osx"
+    ft4222_dll = "libft4222.dylib"
+
+    libs = ["ft4222"] #, "ftd2xx"]
+    incdirs = ["osx"]
+    libdirs = [libdir]
+    rlibdirs = [] #'$ORIGIN/.']
+    libs_to_copy = [ft4222_dll, "libftd2xx.dylib", "libboost_system.dylib"]
 else:
     if architecture()[0] == '64bit':
         libdir = "win/amd64"
