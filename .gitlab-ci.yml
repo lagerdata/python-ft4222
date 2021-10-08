@@ -19,10 +19,6 @@ stages:
       - dist/ft4222-*.whl
       - dist/ft4222-*.tar.gz
 
-wheel-3.6:
-  extends: .wheel
-  image: python:3.6
-
 wheel-3.7:
   extends: .wheel
   image: python:3.7
@@ -34,6 +30,10 @@ wheel-3.8:
 wheel-3.9:
   extends: .wheel
   image: python:3.9
+
+wheel-3.10:
+  extends: .wheel
+  image: python:3.10
 
 wheel-src:
   extends: .wheel
@@ -77,6 +77,13 @@ wheel-win-3.9:
   before_script:
     - choco install python -y --version 3.9 --params "/InstallDir:C:\"
     - $env:Path += ";C:\Python39;C:\Python39\Scripts"
+    - *install_with_pip
+
+wheel-win-3.10:
+  extends: .wheel-win
+  before_script:
+    - choco install python -y --version 3.10 --params "/InstallDir:C:\"
+    - $env:Path += ";C:\Python310;C:\Python310\Scripts"
     - *install_with_pip
 
 pypi:
