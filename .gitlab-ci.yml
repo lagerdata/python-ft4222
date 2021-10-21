@@ -2,89 +2,77 @@ stages:
   - build
   - deploy
 
-
 .wheel:
+  stage: build
+  tags:
+    - linux
+  script:
+    - ./ci/build-wheels.sh ${CI_PROJECT_DIR} ${CI_PROJECT_DIR}/wheelhouse
+  artifacts:
+    paths:
+      - wheelhouse/*.whl
+
+wheel-x86:
+  extends: .wheel
+  image: quay.io/pypa/manylinux_2_24_x86_64
+  variables:
+    PLAT: manylinux_2_24_x86_64
+
+wheel-aarch64:
+  extends: .wheel
+  image: quay.io/pypa/manylinux_2_24_aarch64
+  variables:
+    PLAT: manylinux_2_24_aarch64
+
+src:
   stage: build
   tags:
     - linux
   image: python:3.7
   before_script:
-    - apt update && apt install build-essential
-    - pip install -U setuptools wheel
-    - pip install cython
+    - python -m pip install build
   script:
-    - python setup.py bdist_wheel --plat-name manylinux1_x86_64
+    - python -m build --sdist --outdir dist .
   artifacts:
     paths:
-      - dist/ft4222-*.whl
-      - dist/ft4222-*.tar.gz
-
-wheel-3.7:
-  extends: .wheel
-  image: python:3.7
-
-wheel-3.8:
-  extends: .wheel
-  image: python:3.8
-
-wheel-3.9:
-  extends: .wheel
-  image: python:3.9
-
-wheel-3.10:
-  extends: .wheel
-  image: python:3.10
-
-wheel-src:
-  extends: .wheel
-  before_script:
-    - pip install cython
-  script:
-    - python setup.py sdist
-
+      - dist/*.tar.gz
 
 .wheel-win:
   stage: build
   tags:
     - windows
+  before_script:
+    # https://gitlab.com/gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers/-/issues/13
+    - Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+    - choco install python3 --version=$PYTHON_VERSION --yes --force --no-progress
+    - refreshenv
   script:
-    - python setup.py bdist_wheel
+    - python --version
+    - python -m pip install build
+    - python -m build --wheel --outdir dist .
   artifacts:
     paths:
       - dist\ft4222-*.whl
 
-.install_with_pip: &install_with_pip
-- python -m pip install -U setuptools wheel
-- python -m pip install cython
-- python -m pip install wheel
-
 wheel-win-3.7:
   extends: .wheel-win
-  before_script:
-    - choco install python -y --version 3.7 --params "/InstallDir:C:\"
-    - $env:Path += ";C:\Python37;C:\Python37\Scripts"
-    - *install_with_pip
+  variables:
+    PYTHON_VERSION: "3.7"
 
 wheel-win-3.8:
   extends: .wheel-win
-  before_script:
-    - choco install python -y --version 3.8 --params "/InstallDir:C:\"
-    - $env:Path += ";C:\Python38;C:\Python38\Scripts"
-    - *install_with_pip
+  variables:
+    PYTHON_VERSION: "3.8"
 
 wheel-win-3.9:
   extends: .wheel-win
-  before_script:
-    - choco install python -y --version 3.9 --params "/InstallDir:C:\"
-    - $env:Path += ";C:\Python39;C:\Python39\Scripts"
-    - *install_with_pip
+  variables:
+    PYTHON_VERSION: "3.9"
 
 wheel-win-3.10:
   extends: .wheel-win
-  before_script:
-    - choco install python -y --version 3.10 --params "/InstallDir:C:\"
-    - $env:Path += ";C:\Python310;C:\Python310\Scripts"
-    - *install_with_pip
+  variables:
+    PYTHON_VERSION: "3.10"
 
 pypi:
   stage: deploy
@@ -93,9 +81,9 @@ pypi:
     - pip install twine
   script:
     - twine upload dist/*
+    - twine upload wheelhouse/*
   only:
     - tags
-
 
 pages:
   stage: build
