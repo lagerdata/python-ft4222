@@ -86,7 +86,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='ft4222',
-    version='1.2.2',
+    version='1.3.0',
     author='Bearsh',
     author_email='me@bearsh.org',
     url='https://gitlab.com/msrelectronics/python-ft4222',
