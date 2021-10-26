@@ -14,6 +14,7 @@ from cpython.array cimport array, resize
 from libc.stdio cimport printf
 from enum import IntEnum
 from .GPIO import Dir, Trigger
+from .I2CMaster import ControllerStatus
 
 IF UNAME_SYSNAME == "Windows":
     cdef extern from "<malloc.h>" nogil:
@@ -589,7 +590,7 @@ cdef class FT4222:
         cdef uint8 cs
         status = FT4222_I2CMaster_GetStatus(self._handle, &cs)
         if status == FT4222_OK:
-            return cs
+            return ControllerStatus(cs)
         raise FT4222DeviceError, status
 
 
