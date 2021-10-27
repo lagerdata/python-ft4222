@@ -11,7 +11,7 @@
 Definitions to configure the I2C Master interface.
 """
 
-from enum import IntEnum
+from enum import IntEnum, IntFlag
 
 class Flag(IntEnum):
     """I2CMaster Flags
@@ -32,7 +32,7 @@ class Flag(IntEnum):
     STOP  = 0x04
     START_AND_STOP = 0x06  # START condition followed by SEND and STOP condition
 
-class ControllerStatus(IntEnum):
+class ControllerStatus(IntFlag):
     """I2CMaster controller Status
 
     Attributes:
