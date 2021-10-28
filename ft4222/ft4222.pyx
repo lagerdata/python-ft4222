@@ -219,6 +219,21 @@ cdef class FT4222:
     def __repr__(self):
         return "FT4222: chipVersion: 0x{:x} ({:s}), libVersion: 0x{:x}".format(self._chip_version, self.chipRevision, self._dll_version)
 
+    def setTimeouts(self, read_timeout, write_timeout):
+        """Set the read and write timeouts
+
+        Args:
+            read_timeout (int): Read timeout in milliseconds.
+            write_timeout (int): Write timeout in milliseconds.
+
+        Raises:
+            FT4222DeviceError: on error
+
+        """
+        status = FT_SetTimeouts(self._handle, read_timeout, write_timeout)
+        if status != FT_OK:
+            raise FT4222DeviceError, status
+
     def setClock(self, clk):
         """Set the system clock
 
