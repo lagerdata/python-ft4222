@@ -227,12 +227,12 @@ cdef class FT4222:
             write_timeout (int): Write timeout in milliseconds.
 
         Raises:
-            FT4222DeviceError: on error
+            FT2XXDeviceError: on error
 
         """
         status = FT_SetTimeouts(self._handle, read_timeout, write_timeout)
         if status != FT_OK:
-            raise FT4222DeviceError, status
+            raise FT2XXDeviceError, status
 
     def setClock(self, clk):
         """Set the system clock
