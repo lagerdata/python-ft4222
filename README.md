@@ -47,7 +47,7 @@ dev = ft4222.openByDescription('FT4222 A')
 # use GPIO2 as gpio (not suspend out)
 dev.setSuspendOut(False)
 # use GPIO3 as gpio (not wakeup)
-dev.setWakeUpInterrut(False)
+dev.setWakeUpInterrupt(False)
 
 # init GPIO2 as output
 dev.gpio_Init(gpio2 = Dir.OUTPUT)

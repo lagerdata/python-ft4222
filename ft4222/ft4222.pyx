@@ -278,7 +278,7 @@ cdef class FT4222:
         if status != FT4222_OK:
             raise FT4222DeviceError, status
 
-    def setWakeUpInterrut(self, enable):
+    def setWakeUpInterrupt(self, enable):
         """Enable or disable the wakeup/interrupt
 
         Args:
