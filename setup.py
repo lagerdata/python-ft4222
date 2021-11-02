@@ -110,6 +110,14 @@ setup(
     ],
     keywords='ftdi ft4222',
     packages=['ft4222', 'ft4222.I2CMaster', 'ft4222.GPIO', 'ft4222.SPI', 'ft4222.SPIMaster', 'ft4222.SPISlave'],
+    package_data={
+        'ft4222': ['py.typed', 'ft4222.pyi', '__init__.pyi'],
+        'ft4222.I2CMaster': ['py.typed'],
+        'ft4222.GPIO': ['py.typed'],
+        'ft4222.SPI': ['py.typed'],
+        'ft4222.SPIMaster': ['py.typed'],
+        'ft4222.SPISlave': ['py.typed'],
+    },
     ext_modules=cythonize(extensions),
     cmdclass={'build_py': mybuild},
 )
